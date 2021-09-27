@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="styles.css" rel="stylesheet">
+    <title>Users</title>
+</head>
+<body>
+    <default-header></default-header>
+    <div class='form-div'>
+        <h2 class="form-title">Crear Usuario</h2>
+        <form action="/users" class='form'>
+            <label for="nombre">Nombre</label>
+            <input class="input" name="nombre" type="text" required><br>
+            <label for="apellido">Apellido</label>
+            <input class="input" name="apellido" id="apellido" required>
+            <button class="submit-form" id="users-submit-button" type="submit">Crear</button>
+        </form>
+    </div>
+    <default-footer></default-footer>
+    <script src="main.js"></script>
+    <script src="dynamic.js"></script>
+</body>
+</html>

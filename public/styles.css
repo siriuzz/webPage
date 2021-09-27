@@ -1,0 +1,185 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+/* template  */
+body {
+  margin: 0px;
+  background-color: #b9dae5;
+}
+
+header {
+  position: fixed;
+  top: 0px;
+  width: 100vw;
+  background-color: #1a3944;
+  color: whitesmoke;
+  font-family: Roboto;
+}
+
+nav {
+  display: flex;
+}
+
+h1 {
+  font-size: 20px;
+  padding: 0 2%;
+}
+
+default-header ~ * {
+  margin-top: 70px;
+}
+
+.nav-links {
+  padding: 0px 5%;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.nav-links li a:link {
+  color: white;
+  text-decoration: none;
+}
+
+.nav-links li a:hover {
+  color: hotpink;
+  text-decoration: none;
+}
+
+.nav-links li a:visited {
+  color: #8bc1d3;
+  text-decoration: none;
+}
+
+.nav-bar {
+  justify-content: space-between;
+}
+
+.nav-links a {
+  margin: 0 15px;
+}
+
+/* seccion de contacto */
+.form-div {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.input {
+  display: flex;
+  width: 25em;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+/* #asunto {
+  width: 100%;
+} */
+
+#mensaje {  
+  height: 100px;
+}
+
+#submit-div {
+  text-align: center;
+}
+
+#submit-form {
+  display: inline-block;
+  margin: 0 auto;
+  width: 5em;
+}
+
+#return-link {
+  padding: 0px 5%;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+#return-link:link {
+  color: white;
+  text-decoration: none;
+}
+
+#return-link:hover {
+  color: hotpink;
+  text-decoration: none;
+}
+
+#return-link:visited {
+  color: #005572;
+  text-decoration: none;
+}
+/* footer global  */
+footer {
+  font-family: roboto;
+  display: flex;
+  background-color: gray;
+  width: 100%;
+  height: 40px;
+  margin-top: -40px;
+  position: absolute;
+  bottom: 0px;
+  justify-content: center;
+  align-content: center;
+  background-color: #5ca8c1;
+}
+
+#credits {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  default-header ~ * {
+    margin-top: 150px;
+  }
+
+  #contact-form label{
+    margin:0 auto;
+    padding: 0 auto;
+  }
+
+  .nav-bar {
+    width: 100%;
+    display: inline-block;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .form{
+    justify-content: center;
+    text-align: center;
+  }
+
+  #nav-links {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .input{
+    display: block;
+    width:70%;
+  }
+  #mensaje{
+    width:70%;
+  }
+  #form-div {
+    text-align: center;
+    display:inline-block;
+    width: 100%;
+    flex-direction: column;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+  }
+}

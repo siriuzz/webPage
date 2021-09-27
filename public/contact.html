@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Contact</title>
+</head>
+
+<body id="body">
+  <default-header></default-header>
+  <div class="form-div">
+    <h2 class="form-title" id="contact-form-title">CONTACTANOS</h2>
+    <form action="/contact" method="POST" class="form" id="contact-form" onsubmit="change('MENSAJE ENVIADO')">
+      <div class="form">
+        <input class="input" type="text" name="nombre" placeholder="Nombre" required />
+        <input class="input" type="email" name="email" placeholder="Email" required />
+        <input class="input" id="asunto" type="text" name="asunto" placeholder="Asunto" />
+        <input class="input" id="mensaje" type="text" name="mensaje" placeholder="Mensaje" required />
+      </div>
+      <div id="submit-div">
+        <button class="submit-form" type="submit">Enviar</button>
+      </div>
+    </form>
+  </div>
+
+  <default-footer></default-footer>
+  <script src="main.js"></script>
+  <script src="dynamic.js"></script>
+</body>
+
+</html>
