@@ -12,13 +12,13 @@
 <body id="body">
   <default-header></default-header>
   <div class="form-div">
-    <h2 class="form-title" id="contact-form-title">CONTACTANOS</h2>
-    <form action="/contact" method="POST" class="form" id="contact-form" onsubmit="change('MENSAJE ENVIADO')">
+    <h2 class="form-title" id="contact-form-title">Contactanos</h2>
+    <form action="/contact" method="POST" class="form" id="contact-form" >
       <div class="form">
         <input class="input" type="text" name="nombre" placeholder="Nombre" required />
         <input class="input" type="email" name="email" placeholder="Email" required />
         <input class="input" id="asunto" type="text" name="asunto" placeholder="Asunto" />
-        <input class="input" id="mensaje" type="text" name="mensaje" placeholder="Mensaje" required />
+        <textarea class="input" id="mensaje" type="text" name="mensaje" placeholder="Mensaje" required></textarea>
       </div>
       <div id="submit-div">
         <button class="submit-form" type="submit">Enviar</button>
@@ -28,7 +28,6 @@
 
   <default-footer></default-footer>
   <script src="main.js"></script>
-  <script src="dynamic.js"></script>
 </body>
 
 </html>

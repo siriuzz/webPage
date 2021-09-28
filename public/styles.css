@@ -67,22 +67,17 @@ default-header ~ * {
   justify-content: center;
 }
 
-
-
 .input {
   display: flex;
-  width: 25em;
+  width: 35vw;
   flex-direction: column;
   justify-content: center;
 }
 
-
-/* #asunto {
-  width: 100%;
-} */
-
-#mensaje {  
-  height: 100px;
+#mensaje{
+  height: 70px;
+  margin: auto;
+  resize: vertical; max-height: 300px;
 }
 
 #submit-div {
@@ -105,6 +100,7 @@ default-header ~ * {
 #return-link:link {
   color: white;
   text-decoration: none;
+  font-size: medium;
 }
 
 #return-link:hover {
@@ -116,6 +112,8 @@ default-header ~ * {
   color: #005572;
   text-decoration: none;
 }
+
+
 /* footer global  */
 footer {
   font-family: roboto;
@@ -139,7 +137,29 @@ footer {
 
 @media (max-width: 600px) {
   default-header ~ * {
-    margin-top: 150px;
+    margin-top: 100px;
+  }
+
+.nav-links {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .nav-links a {
+    margin: 0 5%;
+  }
+
+  .form-div{
+    display: flex;
+  width: 100%;
+  flex-direction: column;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  }  
+
+  .form-div .form-title{
+    margin:10px 0;
   }
 
   #contact-form label{
@@ -158,21 +178,23 @@ footer {
 
   .form{
     justify-content: center;
-    text-align: center;
   }
 
-  #nav-links {
-    display: flex;
-    flex-direction: column;
-  }
+  
 
   .input{
-    display: block;
-    width:70%;
+    display: flex;
+  width: 80vw;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 2px 0;
   }
+
   #mensaje{
-    width:70%;
+    height: 50px;
   }
+
   #form-div {
     text-align: center;
     display:inline-block;

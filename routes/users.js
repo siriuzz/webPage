@@ -2,11 +2,15 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 
+// const usersArray = ['xd'];
+
 router.get('/', (req,res) => {
-    users.push({ nombre: req.body.nombre})
-    res.sendFile(path.join(__dirname, '..','public', 'users.html'))
+    res.render('users.ejs')
+    res.end();
 })
 
-const users = [];
+router.post('/', (req,res) => {
+    console.log(req.body.nombre)
+})
 
 module.exports = router;

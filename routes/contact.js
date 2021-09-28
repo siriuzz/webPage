@@ -3,7 +3,7 @@ const router = express.Router();
 const path = require('path');
 
 router.get("/", (req, res) => {
-     res.sendFile(path.join(__dirname, '..','public','contact.html'))
+    //  res.sendFile(path.join(__dirname, '..','public','contact.html'))
 })
 
 router.get("/new", (req, res) => {
@@ -11,7 +11,7 @@ router.get("/new", (req, res) => {
 })
 
 router.post("/", (req, res) => {
-    // console.log(req.body.nombre, req.body.email);
+    console.log(req.body.nombre, req.body.email);
     
 })
 

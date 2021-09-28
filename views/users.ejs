@@ -10,10 +10,10 @@
 <body>
     <default-header></default-header>
     <div class='form-div'>
-        <h2 class="form-title">Crear Usuario</h2>
-        <form action="/users" class='form'>
+        <h2 class="form-title" id='users-form-title'>Crear Usuario</h2>
+        <form action="/users" method="POST" id='users-form' onsubmit="change('USUARIO CREADO')">
             <label for="nombre">Nombre</label>
-            <input class="input" name="nombre" type="text" required><br>
+            <input class="input" name="nombre" type="text" id='nombre' required><br>
             <label for="apellido">Apellido</label>
             <input class="input" name="apellido" id="apellido" required>
             <button class="submit-form" id="users-submit-button" type="submit">Crear</button>
@@ -21,6 +21,5 @@
     </div>
     <default-footer></default-footer>
     <script src="main.js"></script>
-    <script src="dynamic.js"></script>
 </body>
 </html>
