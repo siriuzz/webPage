@@ -11,9 +11,9 @@
     <default-header></default-header>
     <div class='form-div'>
         <h2 class="form-title" id='users-form-title'>Crear Usuario</h2>
-        <form action="/users" method="POST" id='users-form' onsubmit="change('USUARIO CREADO')">
+        <form action="/users" method="POST" id='users-form' onsubmit="change('SE CREO EL USUARIO: ')">
             <label for="nombre">Nombre</label>
-            <input class="input" name="nombre" type="text" id='nombre' required><br>
+            <input class="input" name="nombre" type="text" id='nombre'required><br>
             <label for="apellido">Apellido</label>
             <input class="input" name="apellido" id="apellido" required>
             <button class="submit-form" id="users-submit-button" type="submit">Crear</button>

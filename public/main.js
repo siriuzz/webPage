@@ -30,7 +30,7 @@ class DefaultFooter extends HTMLElement {
 
 customElements.define("default-footer", DefaultFooter);
 
-function change(message) {
+function change(req, res, next) {
 
   const returnLink = document.createElement('a');
   returnLink.id = 'return-link'
@@ -41,7 +41,7 @@ function change(message) {
     const contactFormTitle = document.getElementById('contact-form-title');
     const contactForm = document.getElementById('contact-form');
 
-    contactFormTitle.innerHTML = message;
+    contactFormTitle.innerHTML = 'MENSAJE ENVIADO';
     contactForm.remove();
 
     returnLink.href = '/contact'
@@ -50,18 +50,21 @@ function change(message) {
   } else if (window.location.pathname === '/users') { //users
     const usersFormTitle = document.getElementById('users-form-title');
     const usersForm = document.getElementById('users-form');
+    const nombre = { nombre };
 
-    usersFormTitle.innerHTML = message;
+
+    usersFormTitle.innerHTML = 'CREADO USUARIO: ' + nombre;
     usersForm.remove();
 
     returnLink.href = '/users'
     usersFormTitle.after(returnLink);
   }
+
+  next();
 }
 
 (function dynamicTitle() {
   let title = document.getElementById('title');
-  console.log('titulo cambiado')
   switch (window.location.pathname) {
     case '/about':
       title.innerHTML = `${title.innerText} | ABOUT`;

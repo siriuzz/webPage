@@ -4,6 +4,7 @@ const path = require('path');
 
 router.get("/", (req, res) => {
     //  res.sendFile(path.join(__dirname, '..','public','contact.html'))
+    res.render('contact.ejs');
 })
 
 router.get("/new", (req, res) => {
