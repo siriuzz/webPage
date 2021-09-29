@@ -1,35 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="styles.css" rel="stylesheet" />
-    <title>Users</title>
-  </head>
-  <body>
-    <%- include('./partials/header.ejs') %>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="styles.css" rel="stylesheet" />
+  <title>Users</title>
+</head>
+
+<body>
+
+  <%- include('./partials/header.ejs') %>
     <div class="form-div">
       <h2 class="form-title" id="users-form-title">
         Crear Usuario
       </h2>
-      <form action="/users" method="POST" id="users-form" onsubmit="change()">
+      <form action="/users" id="users-form" method="POST" onsubmit="sendData();">
         <label for="nombre">Nombre</label>
-        <input
-          class="input"
-          name="nombre"
-          type="text"
-          id="nombre"
-          required
-        /><br />
+        <input class="input" name="nombre" type="text" id="nombre" required /><br />
         <label for="apellido">Apellido</label>
         <input class="input" name="apellido" id="apellido" required />
-        <button class="submit-form" id="users-submit-button" type="submit">
+        <button class="submit-form" id="users-submit-button" type="submit" onclick="cambio()">
           Crear
         </button>
       </form>
     </div>
     <%- include('./partials/footer.ejs') %>
     <script src="main.js"></script>
-  </body>
+  </span>
+</body>
+
 </html>
