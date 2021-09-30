@@ -7,13 +7,21 @@ const app = express();
 const path = require('path');
 
 app.use(express.static("public"))
+app.use(expressLayouts);
+app.set('layout', './layouts/layout.ejs');
+
 app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-app.use(bodyParser.json())
+app.use(express.json());
 app.set("view engine", "ejs");
 
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', { usuario: req.body.nombre || ''});
+    
+})
+
+app.post('/', (req, res) => {
+    res.render('index', { usuario: req.body.nombre});
+    console.log(req.body.nombre);
 })
 
 app.get('/about', (req, res) => {

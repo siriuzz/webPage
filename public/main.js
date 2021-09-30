@@ -60,27 +60,29 @@ function cambio() {
 }
 
 function sendData() {
-  const xhr = new XMLHttpRequest();
-  xhr.open('POST', '/users')
-
-  xhr.setRequestHeader("Accept", "application/json");
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader("Authorization", "Bearer dfgsd");
-
-  xhr.onreadystatechange = () => {
-    if (xhr.readyState === 4) {
-      console.log('status', xhr.status);
-    }
-  }
-
-  const info = {
+  event.preventDefault();
+  const url = '/users';
+  const data = {
     "nombre": document.getElementById('nombre').value,
     "apellido": document.getElementById('apellido').value
   };
 
-  xhr.send(info);
+  fetch(url,{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  })  
+  .then(response => {
+    response.json();
+    if(response.status == 200){
+      window.location = '/'
+      console.log('if')
+    }
+  })
+  .catch(error=> {
+    console.log('Error:', error)
+  });
 
-  // setTimeout(function () {
-  //   window.location.href = 'users';
-  // }, 2000)
 }
