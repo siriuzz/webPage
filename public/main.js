@@ -31,6 +31,8 @@ function change() {
 
 
 
+
+
 (function dynamicTitle() {
   let title = document.getElementById('title');
   switch (window.location.pathname) {
@@ -60,29 +62,29 @@ function cambio() {
 }
 
 function sendData() {
-  event.preventDefault();
-  const url = '/users';
-  const data = {
-    "nombre": document.getElementById('nombre').value,
-    "apellido": document.getElementById('apellido').value
-  };
+  // event.preventDefault();
+  // const url = '/users';
+  // const data = {
+  //   "nombre": document.getElementById('nombre').value,
+  //   "apellido": document.getElementById('apellido').value
+  // };
 
-  fetch(url,{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data)
-  })  
-  .then(response => {
-    response.json();
-    if(response.status == 200){
-      window.location = '/'
-      console.log('if')
-    }
-  })
-  .catch(error=> {
-    console.log('Error:', error)
-  });
+  // fetch(url,{
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify(data)
+  // })  
+  // .then(response => {
+  //   response.json();
+  //   if(response.status == 200){
+  //     window.location = '/'
+  //     console.log('if')
+  //   }
+  // })
+  // .catch(error=> {
+  //   console.log('Error:', error)
+  // });
 
 }
