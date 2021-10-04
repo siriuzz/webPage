@@ -48,7 +48,7 @@ function change() {
       title.innerHTML = `${title.innerText} | USERS`;
       break;
 
-    default:
+    case '/':
       title.innerHTML = `${title.innerText} | HOME`;
 
   }
@@ -61,7 +61,7 @@ function cambio() {
   }
 }
 
-function sendData() {
+// function sendData() {
   // event.preventDefault();
   // const url = '/users';
   // const data = {
@@ -87,4 +87,4 @@ function sendData() {
   //   console.log('Error:', error)
   // });
 
-}
+// }

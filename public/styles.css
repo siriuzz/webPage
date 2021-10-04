@@ -1,6 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap"); */
 /* template  */
-body {
+/* body {
   margin: 0px;
   background-color: #b9dae5;
 }
@@ -55,10 +55,10 @@ header ~ * {
 
 .nav-links a {
   margin: 0 15px;
-}
+} */
 
 /* seccion de contacto */
-.form-div {
+/* .form-div {
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -111,11 +111,11 @@ header ~ * {
 #return-link:visited {
   color: #005572;
   text-decoration: none;
-}
+} */
 
 
 /* footer global  */
-footer {
+/* footer {
   font-family: roboto;
   display: flex;
   background-color: gray;
@@ -204,4 +204,4 @@ footer {
     justify-content: center;
     align-items: center;
   }
-}
+} */
