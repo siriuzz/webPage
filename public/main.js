@@ -1,6 +1,6 @@
 function confirmation() {
   const returnLink = document.createElement("a");
-  returnLink.classList.add ("m-auto");
+  returnLink.classList.add("m-auto");
   returnLink.innerHTML = "<- Volver a la pagina anterior";
 
   const contactFormTitle = document.getElementById("contact-form-title");
@@ -43,30 +43,49 @@ function userDisplay() {
   }
 })();
 
-// function sendData() {
-// event.preventDefault();
-// const url = '/users';
-// const data = {
-//   "nombre": document.getElementById('nombre').value,
-//   "apellido": document.getElementById('apellido').value
-// };
+function sendData() {
+  event.preventDefault();
+  // const url = '/users';
+  // const data = {
+  //   "nombre": document.getElementById('nombre').value,
+  //   "apellido": document.getElementById('apellido').value
+  // };
 
-// fetch(url,{
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-//   body: JSON.stringify(data)
-// })
-// .then(response => {
-//   response.json();
-//   if(response.status == 200){
-//     window.location = '/'
-//     console.log('if')
-//   }
-// })
-// .catch(error=> {
-//   console.log('Error:', error)
-// });
+  // fetch(url,{
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify(data)
+  // })
+  // .then(response => {
+  //   response.json();
+  //   if(response.status == 200){
+  //     window.location = '/'
+  //     console.log('if')
+  //   }
+  // })
+  // .catch(error=> {
+  //   console.log('Error:', error)
+  // });
 
-// }
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/users");
+
+  xhr.setRequestHeader("Accept", "application/json");
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.setRequestHeader("Authorization", "Bearer dfgsd");
+
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState === 4) {
+      console.log("status", xhr.status);
+    }
+  };
+
+  const info = {
+    nombre: document.getElementById("nombre").value,
+    apellido: document.getElementById("apellido").value,
+  };
+
+  xhr.send(JSON.parse(info)); 
+}
