@@ -1,17 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
-const main = require("../server");
 const User = require("../models/userModel");
 
 router.use(bodyParser.json());
 
+//renderiza la pagina de users al ir a esa direccion
 router.get("/", (req, res) => {
   res.render("users.ejs");
 });
 
 router.post("/", (req, res) => {
-  //send data mongodb
+  // send data mongodb
   // (function () {
   // const { MongoClient } = require('mongodb');
 
@@ -44,6 +44,14 @@ router.post("/", (req, res) => {
   //     main()
   // })();
 
+// cambiar titulo de la pagina
+async function userDisplay(){
+  const nombre = document.getElementById('nombre').value;
+  const apellido = document.getElementById('apellido').value;
+}  
+
+
+
   //conectar con base de datos mongoose
   const mongoose = require("mongoose");
   mongoose.Promise = global.Promise;
@@ -68,10 +76,6 @@ router.post("/", (req, res) => {
       newUser.save((err, data) => {
         if (err) {
           console.log(error);
-        } else {
-          setTimeout(() => {
-            res.render("users");
-          }, 3000);
         }
       });
     })

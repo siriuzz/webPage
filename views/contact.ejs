@@ -4,65 +4,53 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
-    />
     <title>Contact</title>
   </head>
 
   <body>
-    <div class="form-div">
-      <h2 class="form-title" id="contact-form-title">Contactanos</h2>
+    <div class="d-flex flex-column justify-content-center">
+      <h2 class="text-center" id="contact-form-title">Contactanos</h2>
       <form
+        class="row d-flex justify-content-center text-center m-auto w-50"
         action="/contact"
         method="POST"
-        class="form"
         id="contact-form"
-        onsubmit="change()"
+        onsubmit="confirmation()"
       >
-        <div class="form">
+        <div class="col-md-6 p-1">
           <input
-            class="input"
+            class="w-100"
+            id="nombre"
             type="text"
             name="nombre"
             placeholder="Nombre"
             required
           />
+        </div>
+        <div class="col-md-6 p-1">
           <input
-            class="input"
+            class="w-100"
+            id="apellido"
             type="email"
             name="email"
             placeholder="Email"
             required
           />
-          <input
-            class="input"
-            id="asunto"
-            type="text"
-            name="asunto"
-            placeholder="Asunto"
-          />
+        </div>
+        <div class="col-md-12 p-1">
+          <input class="w-100" type="text" name="asunto" placeholder="Asunto" />
+        </div>
+        <div class="col-md-12 p-1">
           <textarea
-            class="input"
-            id="mensaje"
+          class="w-100"
             type="text"
             name="mensaje"
             placeholder="Mensaje"
             required
           ></textarea>
         </div>
-        <div id="submit-div">
-          <button class="submit-form" type="submit">Enviar</button>
-        </div>
+        <button type="submit">Enviar</button>
       </form>
-      <script
-        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"
-      ></script>
     </div>
     <script src="main.js"></script>
   </body>
