@@ -1,35 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Users</title>
-  </head>
-
-  <body>
-    <div class="d-flex flex-column justify-content-center">
-      <h2 class="text-center" id="user-title">Crear Usuario</h2>
-      <form method="POST" action="/users" class="w-25 m-auto d-flex flex-column text-center" onsubmit="sendData()">
-        <label for="nombre">Nombre</label>
-        <input
-          name="nombre"
-          type="text"
-          id="nombre"
-          required
-        /><br />
-        <label for="apellido">Apellido</label>
-        <input name="apellido" id="apellido" required />
-        <button
-          class="w-50 m-auto"
-          id="users-submit-button"
-          type="submit"
-          onclick="userDisplay()"
-        >
-          Crear
-        </button>
-      </form>
-    </div>
-    <script src="main.js"></script>
-  </body>
-</html>
+<body>
+  <div class="d-flex flex-column justify-content-center">
+    <h2 class="text-center" id="user-title">Crear Usuario</h2>
+    <form
+      method="POST"
+      action="/users"
+      class="w-25 m-auto d-flex flex-column text-center"
+      onsubmit="sendData()"
+    >
+      <label for="nombre">Nombre</label>
+      <input name="nombre" type="text" id="nombre" required /><br />
+      <label for="apellido">Apellido</label>
+      <input name="apellido" id="apellido" required />
+      <button
+        class="w-50 m-auto"
+        id="users-submit-button"
+        type="submit"
+        onclick="userDisplay()"
+      >
+        Crear
+      </button>
+    </form>
+  </div>
+</body>

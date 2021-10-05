@@ -1,57 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contact</title>
-  </head>
-
-  <body>
-    <div class="d-flex flex-column justify-content-center">
-      <h2 class="text-center" id="contact-form-title">Contactanos</h2>
-      <form
-        class="row d-flex justify-content-center text-center m-auto w-50"
-        action="/contact"
-        method="POST"
-        id="contact-form"
-        onsubmit="confirmation()"
-      >
-        <div class="col-md-6 p-1">
-          <input
-            class="w-100"
-            id="nombre"
-            type="text"
-            name="nombre"
-            placeholder="Nombre"
-            required
-          />
-        </div>
-        <div class="col-md-6 p-1">
-          <input
-            class="w-100"
-            id="apellido"
-            type="email"
-            name="email"
-            placeholder="Email"
-            required
-          />
-        </div>
-        <div class="col-md-12 p-1">
-          <input class="w-100" type="text" name="asunto" placeholder="Asunto" />
-        </div>
-        <div class="col-md-12 p-1">
-          <textarea
+<body>
+  <div class="d-flex flex-column justify-content-center">
+    <h2 class="text-center" id="contact-form-title">CONTACT US</h2>
+    <form
+      class="row d-flex justify-content-center text-center m-auto w-50"
+      action="/contact"
+      method="POST"
+      id="contact-form"
+      onsubmit="confirmation()"
+    >
+      <div class="col-md-6 p-1">
+        <input
           class="w-100"
-            type="text"
-            name="mensaje"
-            placeholder="Mensaje"
-            required
-          ></textarea>
-        </div>
-        <button type="submit">Enviar</button>
-      </form>
-    </div>
-    <script src="main.js"></script>
-  </body>
-</html>
+          id="nombre"
+          type="text"
+          name="nombre"
+          placeholder="Nombre"
+          required
+        />
+      </div>
+      <div class="col-md-6 p-1">
+        <input
+          class="w-100"
+          id="apellido"
+          type="email"
+          name="email"
+          placeholder="Email"
+          required
+        />
+      </div>
+      <div class="col-md-12 p-1">
+        <input class="w-100" type="text" name="asunto" placeholder="Asunto" />
+      </div>
+      <div class="col-md-12 p-1">
+        <textarea
+          class="w-100"
+          type="text"
+          name="mensaje"
+          placeholder="Mensaje"
+          required
+        ></textarea>
+      </div>
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+</body>

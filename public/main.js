@@ -1,3 +1,4 @@
+//confirma que el mensaje se envio correctamente
 function confirmation() {
   const returnLink = document.createElement("a");
   returnLink.classList.add("m-auto");
@@ -13,6 +14,7 @@ function confirmation() {
   contactFormTitle.after(returnLink);
 }
 
+//cambia el dom al subir un usuario a la db
 function userDisplay() {
   var strNombre = document.getElementById("nombre").value;
   var strApellido = document.getElementById("apellido").value;
@@ -24,6 +26,30 @@ function userDisplay() {
 }
 
 async function sendData() {
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/users");
+
+  xhr.setRequestHeader("Accept", "application/json");
+  xhr.setRequestHeader("Content-Type", "application/json");
+
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState === 4) {
+      console.log("status", xhr.status);
+    }
+  };
+
+  const info = {
+    nombre: document.getElementById("nombre").value,
+    apellido: document.getElementById("apellido").value,
+  };
+
+  xhr.send(JSON.stringify(info));
+  console.log(window.location.href);
+  setTimeout(() => {
+    window.location.pathname = "/users";
+  }, 2000);
+
+  // forma alternativa de mandar info con fetch api
   // const url = '/users';
   // const data = {
   //   "nombre": document.getElementById('nombre').value,
@@ -47,29 +73,6 @@ async function sendData() {
   // .catch(error=> {
   //   console.log('Error:', error)
   // });
-
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", "/users");
-
-  xhr.setRequestHeader("Accept", "application/json");
-  xhr.setRequestHeader("Content-Type", "application/json");
-
-  xhr.onreadystatechange = () => {
-    if (xhr.readyState === 4) {
-      console.log("status", xhr.status);
-    }
-  };
-
-  const info = {
-    nombre: document.getElementById("nombre").value,
-    apellido: document.getElementById("apellido").value,
-  };
-
-  xhr.send(JSON.stringify(info));
-  console.log(window.location.href)
-  setTimeout(() => {
-    window.location.pathname= '/users'
-  },2000);
 }
 
 (function dynamicTitle() {
@@ -77,10 +80,7 @@ async function sendData() {
   switch (window.location.pathname) {
     case "/about":
       title.innerHTML = `${title.innerText} | ABOUT`;
-      break;
-
-    case "/contact":
-      title.innerHTML = `${title.innerText} | CONTACT`;
+      document.title = "About";
       break;
 
     case "/users":
@@ -89,5 +89,12 @@ async function sendData() {
 
     case "/":
       title.innerHTML = `${title.innerText} | HOME`;
+      document.title = "Home";
+  }
+})();
+
+(function isLogged() {
+  if (localStorage.getItem("username") === null && window.location.pathname !== '/register') {
+    window.location.href = '/register'
   }
 })();
