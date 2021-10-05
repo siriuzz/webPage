@@ -10,7 +10,7 @@
   <body>
     <div class="d-flex flex-column justify-content-center">
       <h2 class="text-center" id="user-title">Crear Usuario</h2>
-      <form method="POST" action="/users" class="w-25 m-auto d-flex flex-column text-center">
+      <form method="POST" action="/users" class="w-25 m-auto d-flex flex-column text-center" onsubmit="sendData()">
         <label for="nombre">Nombre</label>
         <input
           name="nombre"

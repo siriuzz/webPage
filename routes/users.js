@@ -44,19 +44,11 @@ router.post("/", (req, res) => {
   //     main()
   // })();
 
-// cambiar titulo de la pagina
-async function userDisplay(){
-  const nombre = document.getElementById('nombre').value;
-  const apellido = document.getElementById('apellido').value;
-}  
-
-
-
   //conectar con base de datos mongoose
   const mongoose = require("mongoose");
   mongoose.Promise = global.Promise;
 
-  mongoose.connect("mongodb://localhost/users", function (error) {
+  mongoose.connect("mongodb://localhost/webDB", function (error) {
     if (error) {
       console.log("Error!" + error);
     }
@@ -67,10 +59,10 @@ async function userDisplay(){
     .once("open", () => {
       console.log("Connected");
 
-      const {nombre, apellido} = req.body;
+      const { nombre, apellido } = req.body;
       const newUser = new User({
         nombre,
-        apellido
+        apellido,
       });
 
       newUser.save((err, data) => {
@@ -82,6 +74,14 @@ async function userDisplay(){
     .on("error", (error) => {
       console.log("Error:", error);
     });
+
+ 
+
+  // cambiar titulo de la pagina
+  // async function userDisplay() {
+  //   const nombre = document.getElementById("nombre").value;
+  //   const apellido = document.getElementById("apellido").value;
+  // }
 });
 
 module.exports = router;

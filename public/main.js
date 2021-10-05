@@ -23,28 +23,7 @@ function userDisplay() {
   }
 }
 
-(function dynamicTitle() {
-  let title = document.getElementById("title");
-  switch (window.location.pathname) {
-    case "/about":
-      title.innerHTML = `${title.innerText} | ABOUT`;
-      break;
-
-    case "/contact":
-      title.innerHTML = `${title.innerText} | CONTACT`;
-      break;
-
-    case "/users":
-      title.innerHTML = `${title.innerText} | USERS`;
-      break;
-
-    case "/":
-      title.innerHTML = `${title.innerText} | HOME`;
-  }
-})();
-
-function sendData() {
-  event.preventDefault();
+async function sendData() {
   // const url = '/users';
   // const data = {
   //   "nombre": document.getElementById('nombre').value,
@@ -74,7 +53,6 @@ function sendData() {
 
   xhr.setRequestHeader("Accept", "application/json");
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader("Authorization", "Bearer dfgsd");
 
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4) {
@@ -87,5 +65,29 @@ function sendData() {
     apellido: document.getElementById("apellido").value,
   };
 
-  xhr.send(JSON.parse(info)); 
+  xhr.send(JSON.stringify(info));
+  console.log(window.location.href)
+  setTimeout(() => {
+    window.location.pathname= '/users'
+  },2000);
 }
+
+(function dynamicTitle() {
+  let title = document.getElementById("title");
+  switch (window.location.pathname) {
+    case "/about":
+      title.innerHTML = `${title.innerText} | ABOUT`;
+      break;
+
+    case "/contact":
+      title.innerHTML = `${title.innerText} | CONTACT`;
+      break;
+
+    case "/users":
+      title.innerHTML = `${title.innerText} | USERS`;
+      break;
+
+    case "/":
+      title.innerHTML = `${title.innerText} | HOME`;
+  }
+})();
