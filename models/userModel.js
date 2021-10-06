@@ -4,10 +4,12 @@ const Schema = mongoose.Schema;
 
 //crear schema y modelo
 const UserSchema = new Schema({
-    nombre: String,
-    apellido: String
+    name        : String,
+    username    : String,
+    email       : String,
+    password    : String
 })
 
-const User = mongoose.model('user', UserSchema);
+const User = mongoose.model('users', UserSchema);
 
 module.exports = User;

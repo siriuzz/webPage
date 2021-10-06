@@ -45,35 +45,35 @@ router.post("/", (req, res) => {
   // })();
 
   //conectar con base de datos mongoose
-  const mongoose = require("mongoose");
-  mongoose.Promise = global.Promise;
+  // const mongoose = require("mongoose");
+  // mongoose.Promise = global.Promise;
 
-  mongoose.connect("mongodb://localhost/webDB", function (error) {
-    if (error) {
-      console.log("Error!" + error);
-    }
-  });
+  // mongoose.connect("mongodb://localhost/webDB", function (error) {
+  //   if (error) {
+  //     console.log("Error!" + error);
+  //   }
+  // });
 
-  //send data mongoose
-  mongoose.connection
-    .once("open", () => {
-      console.log("Connected");
+  // //send data mongoose
+  // mongoose.connection
+  //   .once("open", () => {
+  //     console.log("Connected");
 
-      const { nombre, apellido } = req.body;
-      const newUser = new User({
-        nombre,
-        apellido,
-      });
+  //     const { nombre, apellido } = req.body;
+  //     const newUser = new User({
+  //       nombre,
+  //       apellido,
+  //     });
 
-      newUser.save((err, data) => {
-        if (err) {
-          console.log(error);
-        }
-      });
-    })
-    .on("error", (error) => {
-      console.log("Error:", error);
-    });
+  //     newUser.save((err, data) => {
+  //       if (err) {
+  //         console.log(error);
+  //       }
+  //     });
+  //   })
+  //   .on("error", (error) => {
+  //     console.log("Error:", error);
+  //   });
 
  
 

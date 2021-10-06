@@ -1,16 +1,15 @@
 <body>
   <div class="register">
-    <h2 class="text-center align-items-center mb-3" id="user-title">
+    <h2 class="text-center align-items-center mb-3" id="register-title">
       Create account
     </h2>
     <form
       method="POST"
-      action="/users"
-      class="w-100 m-auto row"
-      id='register-form'
-      onsubmit="sendData()"
+      class="w-75 m-auto row"
+      id="register-form"
+      onsubmit="sendRegisterData()"
     >
-      <div>
+      <div class="input-div">
         <label for="name" class="w-25">Name</label>
         <input
           name="name"
@@ -20,15 +19,15 @@
           required
         />
       </div>
-      <div>
+      <div class="input-div">
         <label for="username" class="w-25">Username</label>
         <input name="username" class="register-inputs" id="username" required />
       </div>
-      <div>
+      <div class="input-div">
         <label for="email" class="w-25">Email</label>
         <input name="email" class="register-inputs" id="email" required />
       </div>
-      <div>
+      <div class="input-div">
         <label for="password" class="w-25">Password</label>
         <input
           name="password"
@@ -38,7 +37,7 @@
           required
         />
       </div>
-      <div>
+      <div class="input-div">
         <label for="repeat-password" class="w-25">Repeat password</label>
         <input
           name="repeat-password"
@@ -48,12 +47,19 @@
           required
         />
       </div>
-
+      <div class="d-flex justify-content-center">
+        <span class="m-auto bg-danger rounded px-1 d-none" id="password-error"
+          >Passwords do not match</span
+        >
+      </div>
+      <div class="d-flex justify-content-center">
+        <span class="m-auto bg-danger rounded px-1 d-none" id="invalid-password"
+          >Password must be at least 8 characters long</span
+        >
+      </div>
       <button
-        class="w-50 m-auto"
+        class="w-50 m-auto my-2 rounded bg-white"
         id="users-submit-button"
-        type="submit"
-        onclick="userDisplay()"
       >
         Crear
       </button>

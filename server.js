@@ -58,6 +58,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.set("view engine", "ejs");
 
+//router profile
+const profileRouter = require('./routes/profile');
+app.use('/profile', profileRouter);
+
 //router register
 const registerRouter = require("./routes/register");
 app.use("/register", registerRouter);
