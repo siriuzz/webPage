@@ -5,11 +5,12 @@ const User = require("../models/userModel");
 const expressLayouts = require("express-ejs-layouts");
 
 router.get("/", (req, res) => {
-  res.render("register.ejs", { layout: "layouts/noNavbar.ejs" });
+  res.render("register", { layout: "layouts/noNavbar.ejs" });
 });
 
 router.post("/", (req, res) => {
   //conectar con base de datos mongoose
+  var result;
   const mongoose = require("mongoose");
   mongoose.Promise = global.Promise;
 
@@ -36,14 +37,17 @@ router.post("/", (req, res) => {
         if (err) {
           console.log(error);
         } else {
-          console.log('data saved')
+          console.log("data saved");
+          result = "Data saved";
         }
       });
     })
     .on("error", (error) => {
       console.log("Error:", error);
+      result = "Fallo en el servidor";
     });
-    res.json({ok: 'true'});
+
+  res.status(200).json({ result: result });
 });
 
 module.exports = router;

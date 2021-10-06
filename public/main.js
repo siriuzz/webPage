@@ -26,13 +26,13 @@ function confirmation() {
 //   }
 // }
 
-async function sendRegisterData() {
+function sendRegisterData() {
+  event.preventDefault();
+
   const password = document.getElementById("password").value;
   const repeatPassword = document.getElementById("repeat-password").value;
 
   if (password !== repeatPassword) {
-    event.preventDefault();
-
     const passwordErrorSpan = document.getElementById("password-error");
 
     passwordErrorSpan.classList.remove("d-none");
@@ -44,8 +44,6 @@ async function sendRegisterData() {
   }
 
   if (password.length < 8) {
-    event.preventDefault();
-
     const invalidPasswordSpan = document.getElementById("invalid-password");
 
     invalidPasswordSpan.classList.remove("d-none");
@@ -68,18 +66,19 @@ async function sendRegisterData() {
         console.log("status", xhr.status);
         document.getElementById("register-title").innerHTML =
           "Cuenta creada exitosamente";
+
+        localStorage.setItem(
+          "account",
+          JSON.stringify({
+            name: document.getElementById("name").value,
+            username: document.getElementById("username").value,
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+          })
+
+        );
       }
     };
-
-    localStorage.setItem(
-      "account",
-      JSON.stringify({
-        name: document.getElementById("name").value,
-        username: document.getElementById("username").value,
-        email: document.getElementById("email").value,
-        password: document.getElementById("password").value,
-      })
-    );
 
     const info = JSON.stringify({
       name: document.getElementById("name").value,
@@ -87,6 +86,7 @@ async function sendRegisterData() {
       email: document.getElementById("email").value,
       password: document.getElementById("password").value,
     });
+
     xhr.send(info);
   }
 
@@ -150,6 +150,6 @@ function eraseAccount() {
     window.location.pathname !== "/register"
   ) {
     window.location.href = "/register";
-  }
-  console.log(JSON.parse(localStorage.getItem("account")).name);
+  };
+  // console.log(JSON.parse(localStorage.getItem("account")).name);
 })();
