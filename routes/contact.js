@@ -14,4 +14,3 @@ router.post("/", (req, res) => {
   console.log(req.body.nombre, req.body.email);
 });
 
-module.exports = router;

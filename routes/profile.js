@@ -1,11 +1,10 @@
-const express = require("express");
-const router = express.Router();
+module.exports = (app) => {
 
-router.get('/', (req, res) => {
-    res.render('profile');
-});
+  app.get('/profile', (req, res) => {
+    res.render("profile");
+  });
 
-router.post('/', (req, res) => {
-})
+  app.post("/profile", (req, res) => {
 
-module.exports = router;
+  });
+};

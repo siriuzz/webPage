@@ -1,3 +1,5 @@
+
+
 //confirma que el mensaje se envio correctamente
 function confirmation() {
   const returnLink = document.createElement("a");
@@ -12,6 +14,41 @@ function confirmation() {
 
     registerForm.style.display = "hidden";
     registerTitle.after(returnLink);
+  }
+}
+
+function showPassword() {
+  event.preventDefault();
+  const eye1 = document.getElementById("eye1");
+  const eye2 = document.getElementById("eye2");
+
+  const passwordInput = document.getElementById('password')
+  const repeatPasswordInput = document.getElementById('repeat-password')
+
+  if (event.target === eye1) {
+    if (eye1.classList.contains("fa-eye-slash")) {
+      eye1.classList.add("fa-eye");
+      eye1.classList.remove("fa-eye-slash");
+      passwordInput.type = 'text';
+
+    } else {
+      eye1.classList.add("fa-eye-slash");
+      eye1.classList.remove("fa-eye");
+      passwordInput.type = 'password';
+
+    }
+  } else {
+    if (eye2.classList.contains("fa-eye-slash")) {
+      eye2.classList.add("fa-eye");
+      eye2.classList.remove("fa-eye-slash");
+      repeatPasswordInput.type = 'text';
+
+    } else {
+      eye2.classList.add("fa-eye-slash");
+      eye2.classList.remove("fa-eye");
+      repeatPasswordInput.type = 'password';
+
+    }
   }
 }
 
@@ -33,26 +70,37 @@ function sendRegisterData() {
   const repeatPassword = document.getElementById("repeat-password").value;
 
   if (password !== repeatPassword) {
-    const passwordErrorSpan = document.getElementById("password-error");
+    const passwordError = document.getElementById("password-error");
 
-    passwordErrorSpan.classList.remove("d-none");
-    passwordErrorSpan.style.display = "block";
+    passwordError.classList.remove("d-none");
+    passwordError.style.display = "block";
 
     setTimeout(() => {
-      passwordErrorSpan.classList.add("d-none");
+      passwordError.classList.add("d-none");
     }, 4000);
   }
 
   if (password.length < 8) {
-    const invalidPasswordSpan = document.getElementById("invalid-password");
+    const invalidPassword = document.getElementById("invalid-password");
 
-    invalidPasswordSpan.classList.remove("d-none");
-    invalidPasswordSpan.style.display = "block";
+    invalidPassword.classList.remove("d-none");
+    invalidPassword.style.display = "block";
 
     setTimeout(() => {
-      invalidPasswordSpan.classList.add("d-none");
+      invalidPassword.classList.add("d-none");
     }, 4000);
   }
+
+  // if (db.users.find({ username: document.getElementById("username").value })) {
+  //   const usernameTaken = document.getElementById("username-taken");
+
+  //   usernameTaken.classList.remove("d-none");
+  //   usernameTaken.style.display = "block";
+
+  //   setTimeout(() => {
+  //     usernameTaken.classList.add("d-none");
+  //   }, 4000);
+  // }
 
   if (password == repeatPassword && password.length >= 8) {
     const xhr = new XMLHttpRequest();
@@ -75,7 +123,6 @@ function sendRegisterData() {
             email: document.getElementById("email").value,
             password: document.getElementById("password").value,
           })
-
         );
       }
     };
@@ -116,28 +163,28 @@ function sendRegisterData() {
   // });
 }
 
-(function dynamicTitle() {
-  let title = document.getElementById("title");
-  switch (window.location.pathname) {
-    case "/about":
-      title.innerHTML = `${title.innerText} | ABOUT`;
-      document.title = "About";
-      break;
+// (function dynamicTitle() {
+//   let title = document.getElementById("title");
+//   switch (window.location.pathname) {
+//     case "/about":
+//       title.innerHTML = `${title.innerText} | ABOUT`;
+//       document.title = "About";
+//       break;
 
-    case "/users":
-      title.innerHTML = `${title.innerText} | USERS`;
-      break;
+//     case "/users":
+//       title.innerHTML = `${title.innerText} | USERS`;
+//       break;
 
-    case "/profile":
-      title.innerHTML = `${title.innerText} | PROFILE`;
-      document.title = "Profile";
-      break;
+//     case "/profile":
+//       title.innerHTML = `${title.innerText} | PROFILE`;
+//       document.title = "Profile";
+//       break;
 
-    case "/":
-      title.innerHTML = `${title.innerText} | HOME`;
-      document.title = "Home";
-  }
-})();
+//     case "/":
+//       title.innerHTML = `${title.innerText} | HOME`;
+//       document.title = "Home";
+//   }
+// })();
 
 function eraseAccount() {
   localStorage.removeItem("account");
@@ -150,6 +197,6 @@ function eraseAccount() {
     window.location.pathname !== "/register"
   ) {
     window.location.href = "/register";
-  };
+  }
   // console.log(JSON.parse(localStorage.getItem("account")).name);
 })();
