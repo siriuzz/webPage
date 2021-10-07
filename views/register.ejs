@@ -51,8 +51,8 @@
                   placeholder="Password"
                   id="password"
                 />
-                <div class="input-group-addon border d-flex align-items-center">
-                  <a href onclick="showPassword()"
+                <div class="input-group-addon border d-flex align-items-center" tabindex="-1">
+                  <a tabindex="-1" href onclick="showPassword()"
                     ><i class="fa fa-eye-slash p-2" aria-hidden="true" id='eye1'></i
                   ></a>
                 </div>
@@ -68,7 +68,7 @@
                   id="repeat-password"
                 />
                 <div class="input-group-addon border d-flex align-items-center">
-                  <a href onclick="showPassword()"
+                  <a tabindex="-1" href onclick="showPassword()"
                     ><i class="fa fa-eye-slash p-2" aria-hidden="true" id="eye2"></i
                   ></a>
                 </div>
@@ -98,7 +98,7 @@
               </div>
               <p class="text-center mt-3">
                 Already have an account?
-                <span class="text-primary">Sign in</span>
+                <span class="text-primary" onclick="window.location = '/login'">Sign in</span>
               </p>
             </form>
           </div>

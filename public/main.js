@@ -1,5 +1,3 @@
-
-
 //confirma que el mensaje se envio correctamente
 function confirmation() {
   const returnLink = document.createElement("a");
@@ -22,32 +20,25 @@ function showPassword() {
   const eye1 = document.getElementById("eye1");
   const eye2 = document.getElementById("eye2");
 
-  const passwordInput = document.getElementById('password')
-  const repeatPasswordInput = document.getElementById('repeat-password')
+  const passwordInput = document.getElementById("password");
+  const repeatPasswordInput = document.getElementById("repeat-password");
 
   if (event.target === eye1) {
     if (eye1.classList.contains("fa-eye-slash")) {
-      eye1.classList.add("fa-eye");
-      eye1.classList.remove("fa-eye-slash");
-      passwordInput.type = 'text';
+      eye1.classList.replace("fa-eye-slash", "fa-eye");
 
+      passwordInput.type = "text";
     } else {
-      eye1.classList.add("fa-eye-slash");
-      eye1.classList.remove("fa-eye");
-      passwordInput.type = 'password';
-
+      eye1.classList.replace("fa-eye", "fa-eye-slash");
+      passwordInput.type = "password";
     }
   } else {
     if (eye2.classList.contains("fa-eye-slash")) {
-      eye2.classList.add("fa-eye");
-      eye2.classList.remove("fa-eye-slash");
-      repeatPasswordInput.type = 'text';
-
+      eye2.classList.replace("fa-eye-slash", "fa-eye");
+      repeatPasswordInput.type = "text";
     } else {
-      eye2.classList.add("fa-eye-slash");
-      eye2.classList.remove("fa-eye");
-      repeatPasswordInput.type = 'password';
-
+      eye2.classList.replace("fa-eye", "fa-eye-slash");
+      repeatPasswordInput.type = "password";
     }
   }
 }
@@ -68,27 +59,21 @@ function sendRegisterData() {
 
   const password = document.getElementById("password").value;
   const repeatPassword = document.getElementById("repeat-password").value;
+  const passwordError = document.getElementById("password-error");
+  const invalidPassword = document.getElementById("invalid-password");
+
+  passwordError.style.display = "none";
+  invalidPassword.style.display = "none";
 
   if (password !== repeatPassword) {
-    const passwordError = document.getElementById("password-error");
-
     passwordError.classList.remove("d-none");
     passwordError.style.display = "block";
-
-    setTimeout(() => {
-      passwordError.classList.add("d-none");
-    }, 4000);
   }
 
   if (password.length < 8) {
-    const invalidPassword = document.getElementById("invalid-password");
-
     invalidPassword.classList.remove("d-none");
     invalidPassword.style.display = "block";
 
-    setTimeout(() => {
-      invalidPassword.classList.add("d-none");
-    }, 4000);
   }
 
   // if (db.users.find({ username: document.getElementById("username").value })) {
@@ -135,6 +120,10 @@ function sendRegisterData() {
     });
 
     xhr.send(info);
+
+    setTimeout(() => {
+      window.location = '/';
+    }, 2500);
   }
 
   // forma alternativa de mandar info con fetch api

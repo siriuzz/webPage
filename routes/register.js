@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 
 module.exports = (app) => {
   app.get("/register", (req, res) => {
-    res.render("register");
+    res.render("register", {layout: 'layouts/empty.ejs', title: 'Register'});
   });
 
   app.post("/register", (req, res) => {

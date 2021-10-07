@@ -10,7 +10,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/styles.css" />
-    <title>Document</title>
+    <title><%- title %></title>
   </head>
 
   <body>
@@ -53,6 +53,9 @@
           <li>
             <a href="/profile" class="nav-link px-2 link-dark">Profile</a>
           </li>
+          <li>
+            <a href="/login" class="nav-link px-2 link-dark">Login</a>
+          </li>
           <!-- <li><a href="#" class="nav-link px-2 link-dark"></a></li>
           <li><a href="#" class="nav-link px-2 link-dark"></a></li> -->
         </ul>
@@ -71,7 +74,9 @@
         </div>
       </header>
     </nav>
+
     <%- body %>
+
     <div class="container">
       <footer
         class="
@@ -115,10 +120,10 @@
           <li class="nav-item">
             <a href="/profile" class="nav-link px-2 text-muted">Profile</a>
           </li>
-          <!-- <li class="nav-item">
-            <a href="#" class="nav-link px-2 text-muted">FAQs</a>
-          </li>
           <li class="nav-item">
+            <a href="/login" class="nav-link px-2 text-muted">Login</a>
+          </li>
+          <!-- <li class="nav-item">
             <a href="#" class="nav-link px-2 text-muted">About</a>
           </li> -->
         </ul>
