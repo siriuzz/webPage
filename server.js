@@ -2,6 +2,7 @@ const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const bodyParser = require("body-parser");
 const User = require("./models/userModel");
+const bcrypt = require('bcrypt')
 
 const app = express();
 

@@ -9,6 +9,10 @@
       href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
       rel="stylesheet"
     />
+    <!-- <link
+      href="http://127.0.0.1:3000/assets/bootstrap/js/bootstrap.js.map"
+      rel="stylesheet"
+    /> -->
     <link rel="stylesheet" href="/styles.css" />
     <title><%- title %></title>
   </head>
@@ -53,15 +57,19 @@
           <li>
             <a href="/profile" class="nav-link px-2 link-dark">Profile</a>
           </li>
-          <li>
+          <!-- <li>
             <a href="/login" class="nav-link px-2 link-dark">Login</a>
-          </li>
+          </li> -->
           <!-- <li><a href="#" class="nav-link px-2 link-dark"></a></li>
           <li><a href="#" class="nav-link px-2 link-dark"></a></li> -->
         </ul>
 
         <div class="col-md-3 text-end">
-          <button type="button" class="btn btn-outline-primary me-2">
+          <button
+            type="button"
+            class="btn btn-outline-primary me-2"
+            onclick='window.location.pathname = "/login"'
+          >
             Login
           </button>
           <button

@@ -1,5 +1,4 @@
 module.exports = (app) => {
-
     require('./routes/profile')(app);
     require('./routes/register')(app);
     require('./routes/home')(app);

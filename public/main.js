@@ -73,7 +73,6 @@ function sendRegisterData() {
   if (password.length < 8) {
     invalidPassword.classList.remove("d-none");
     invalidPassword.style.display = "block";
-
   }
 
   // if (db.users.find({ username: document.getElementById("username").value })) {
@@ -106,7 +105,7 @@ function sendRegisterData() {
             name: document.getElementById("name").value,
             username: document.getElementById("username").value,
             email: document.getElementById("email").value,
-            password: document.getElementById("password").value,
+            password: document.getElementById("password").value
           })
         );
       }
@@ -116,13 +115,13 @@ function sendRegisterData() {
       name: document.getElementById("name").value,
       username: document.getElementById("username").value,
       email: document.getElementById("email").value,
-      password: document.getElementById("password").value,
+      password: document.getElementById("password").value
     });
 
     xhr.send(info);
 
     setTimeout(() => {
-      window.location = '/';
+      window.location = "/";
     }, 2500);
   }
 
@@ -150,6 +149,42 @@ function sendRegisterData() {
   // .catch(error=> {
   //   console.log('Error:', error)
   // });
+}
+
+function sendLoginData() {
+  event.preventDefault();
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/login");
+
+  xhr.setRequestHeader("Accept", "application/json");
+  xhr.setRequestHeader("Content-Type", "application/json");
+  
+  const invalidUser = document.getElementById('invalid-user');
+  const flexCheckOut = document.getElementById('flexCheckout');
+  
+  invalidUser.style.display = 'd-none';
+
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      console.log("status", xhr.status);
+      window.location = '/';
+
+      if(flexCheckOut.checked == true){
+
+      }
+
+    } else if(xhr.readyState == 4 && xhr.status == 401){
+      invalidUser.classList.remove('d-none');
+    }
+  };
+
+  const data = JSON.stringify({
+    username: document.getElementById("username").value,
+    password: document.getElementById("password").value
+  });
+
+  xhr.send(data);
 }
 
 // (function dynamicTitle() {
@@ -180,12 +215,13 @@ function eraseAccount() {
   window.location.href = "/register";
 }
 
-(function isLogged() {
-  if (
-    localStorage.getItem("account") === null &&
-    window.location.pathname !== "/register"
-  ) {
-    window.location.href = "/register";
-  }
-  // console.log(JSON.parse(localStorage.getItem("account")).name);
-})();
+// (function isLogged() {
+//   if (
+//     localStorage.getItem("account") === null &&
+//     window.location.pathname !== "/register" &&
+//     window.location.pathname !== '/'
+//   ) {
+//     window.location.replace("/register");
+//   }
+//   // console.log(JSON.parse(localStorage.getItem("account")).name);
+// })();
