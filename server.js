@@ -4,7 +4,9 @@ const expressLayouts = require("express-ejs-layouts");
 const bodyParser = require("body-parser");
 const User = require("./models/userModel");
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+
+
 
 const app = express();
 
