@@ -1,8 +1,10 @@
+//creacion de app y config
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const bodyParser = require("body-parser");
 const User = require("./models/userModel");
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 
 const app = express();
 
@@ -31,14 +33,15 @@ mongoose.connect("mongodb://localhost/accounts", function (error) {
 
 //send data mongoose
 mongoose.connection
-  .once("open", () => {
-    console.log("Connected");
-  })
-  .on("error", (error) => {
-    console.log("Error:", error);
-    result = "Fallo al conectar con DB";
-  });
+.once("open", () => {
+  console.log("Connected");
+})
+.on("error", (error) => {
+  console.log("Error:", error);
+  result = "Fallo al conectar con DB";
+});
 
+app.listen(3000, () => console.log("server on port 3000"));
 // // router profile
 // const profileRouter = require('./routes/profile');
 // app.use('/profile', profileRouter);
@@ -57,7 +60,6 @@ mongoose.connection
 
 //paginas
 
-app.listen(3000, () => console.log("server on port 3000"));
 
 //conectar con db mongodb
 // const { MongoClient } = require('mongodb');
@@ -101,4 +103,4 @@ app.listen(3000, () => console.log("server on port 3000"));
 //     });
 // }
 
-//creacion de app y config
+
