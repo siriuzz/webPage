@@ -2,11 +2,17 @@ const User = require("../models/userModel");
 
 module.exports = (app) => {
   //renderiza la pagina de users al ir a esa direccion
-  app.get("/users", (req, res) => {
-    res.render("users.ejs");
+  app.get("/users", async (req, res) => {
+    console.log(await User.find())
+    const findAllUsers = await User.find();
+
+    res.render("users.ejs", { title: 'Users', users: findAllUsers });
+    
   });
 
   app.post("/users", (req, res) => {
+
+
     // send data mongodb
     // (function () {
     // const { MongoClient } = require('mongodb');

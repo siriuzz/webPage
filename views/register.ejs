@@ -30,6 +30,13 @@
                   id="username"
                 />
               </div>
+              <div
+                class="alert alert-danger d-none"
+                role="alert"
+                id="username-taken"
+              >
+                Username already in use
+              </div>
               <div class="input-group mb-3">
                 <span class="input-group-text bg-primary"
                   >😴<i class="bi bi-envelope text-white"></i
@@ -41,6 +48,13 @@
                   id="email"
                 />
               </div>
+              <div
+                class="alert alert-danger d-none"
+                role="alert"
+                id="email-taken"
+              >
+                Email already in use
+              </div>
               <div class="input-group mb-3">
                 <span class="input-group-text bg-primary"
                   >😨<i class="bi bi-key-fill text-white"></i
@@ -51,16 +65,23 @@
                   placeholder="Password"
                   id="password"
                 />
-                <div class="input-group-addon border d-flex align-items-center" tabindex="-1">
+                <div
+                  class="input-group-addon border d-flex align-items-center"
+                  tabindex="-1"
+                >
                   <a tabindex="-1" href onclick="showPassword()"
-                    ><i class="fa fa-eye-slash p-2" aria-hidden="true" id='eye1'></i
+                    ><i
+                      class="fa fa-eye-slash p-2"
+                      aria-hidden="true"
+                      id="eye1"
+                    ></i
                   ></a>
                 </div>
               </div>
               <div class="input-group mb-3">
                 <span class="input-group-text bg-primary"
-                  ><i class="bi bi-key-fill text-white"></i
-                >🧐</span>
+                  ><i class="bi bi-key-fill text-white"></i>🧐</span
+                >
                 <input
                   type="password"
                   class="form-control"
@@ -69,7 +90,11 @@
                 />
                 <div class="input-group-addon border d-flex align-items-center">
                   <a tabindex="-1" href onclick="showPassword()"
-                    ><i class="fa fa-eye-slash p-2" aria-hidden="true" id="eye2"></i
+                    ><i
+                      class="fa fa-eye-slash p-2"
+                      aria-hidden="true"
+                      id="eye2"
+                    ></i
                   ></a>
                 </div>
               </div>
@@ -98,7 +123,9 @@
               </div>
               <p class="text-center mt-3">
                 Already have an account?
-                <span class="text-primary" onclick="window.location = '/login'"><a>Sign in</a></span>
+                <span class="text-primary" onclick="window.location = '/login'"
+                  ><a>Sign in</a></span
+                >
               </p>
             </form>
           </div>

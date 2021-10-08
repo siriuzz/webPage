@@ -1,5 +1,5 @@
 <body>
-  <div class="d-flex flex-column justify-content-center">
+  <!-- <div class="d-flex flex-column justify-content-center">
     <h2 class="text-center" id="user-title">Crear Usuario</h2>
     <form
       method="POST"
@@ -19,5 +19,42 @@
         Crear
       </button>
     </form>
-  </div>
+  </div> -->
+  <table class="table table-bordered w-75 m-auto">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Username</th>
+        <th scope="col">Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.forEach((user, i) => { %>
+      <tr>
+        <th scope="row"><%= i + 1 %></th>
+        <td><%= user.name %></td>
+        <td><%= user.username %></td>
+        <td class="d-flex justify-content-between">
+          <%= user.email %>
+          <div class="btn-group">
+            <a
+              href="#"
+              role="button"
+              id="dropdownMenuLink"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              ><i class="bi bi-three-dots"></i
+            ></a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
 </body>

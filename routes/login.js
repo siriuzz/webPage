@@ -1,5 +1,8 @@
+require("dotenv").config();
+
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 module.exports = (app) => {
   app.get("/login", (req, res) => {
@@ -9,18 +12,19 @@ module.exports = (app) => {
   app.post("/login", async (req, res) => {
     try {
       const user = {
-          username: req.body.username,
-          password: req.body.password
-      }
+        username: req.body.username,
+        password: req.body.password,
+      };
 
       const findUser = await User.findOne({ username: user.username });
 
       if (!findUser) {
-        return res.status(401).json('user does not exist')
+        return res.status(401).json("user does not exist");
       }
 
       if (await bcrypt.compare(user.password, findUser.password)) {
         res.status(200).json("success");
+
       } else {
         res.status(401).json("not allowed");
       }

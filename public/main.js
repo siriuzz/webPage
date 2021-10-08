@@ -1,3 +1,13 @@
+(function isLogged() {
+  if (
+    localStorage.getItem("account") === null &&
+    window.location.pathname !== "/register" &&
+    window.location.pathname !== "/"
+  ) {
+    window.location.replace("/register");
+  }
+})();
+
 //confirma que el mensaje se envio correctamente
 function confirmation() {
   const returnLink = document.createElement("a");
@@ -59,32 +69,25 @@ function sendRegisterData() {
 
   const password = document.getElementById("password").value;
   const repeatPassword = document.getElementById("repeat-password").value;
+
+  //errores
   const passwordError = document.getElementById("password-error");
   const invalidPassword = document.getElementById("invalid-password");
+  const usernameTaken = document.getElementById("username-taken");
+  const emailTaken = document.getElementById("email-taken");
 
-  passwordError.style.display = "none";
-  invalidPassword.style.display = "none";
+  invalidPassword.classList.add("d-none");
+  passwordError.classList.add("d-none");
+  usernameTaken.classList.add("d-none");
+  emailTaken.classList.add("d-none");
 
   if (password !== repeatPassword) {
     passwordError.classList.remove("d-none");
-    passwordError.style.display = "block";
   }
 
   if (password.length < 8) {
     invalidPassword.classList.remove("d-none");
-    invalidPassword.style.display = "block";
   }
-
-  // if (db.users.find({ username: document.getElementById("username").value })) {
-  //   const usernameTaken = document.getElementById("username-taken");
-
-  //   usernameTaken.classList.remove("d-none");
-  //   usernameTaken.style.display = "block";
-
-  //   setTimeout(() => {
-  //     usernameTaken.classList.add("d-none");
-  //   }, 4000);
-  // }
 
   if (password == repeatPassword && password.length >= 8) {
     const xhr = new XMLHttpRequest();
@@ -94,10 +97,13 @@ function sendRegisterData() {
     xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.onreadystatechange = () => {
-      if (xhr.readyState == 4) {
+      if (xhr.readyState == 4 && xhr.status == 200) {
         console.log("status", xhr.status);
         document.getElementById("register-title").innerHTML =
           "Cuenta creada exitosamente";
+        setTimeout(() => {
+          window.location = "/";
+        }, 2500);
 
         localStorage.setItem(
           "account",
@@ -105,9 +111,15 @@ function sendRegisterData() {
             name: document.getElementById("name").value,
             username: document.getElementById("username").value,
             email: document.getElementById("email").value,
-            password: document.getElementById("password").value
+            password: document.getElementById("password").value,
           })
         );
+      } else if (xhr.readyState == 4 && xhr.status == 401) {
+        const error = JSON.parse(xhr.response).error;
+        error.forEach((e) => {
+          document.getElementById(e.field).classList.remove("d-none");
+          document.getElementById(e.field).innerHTML = e.text;
+        });
       }
     };
 
@@ -115,16 +127,11 @@ function sendRegisterData() {
       name: document.getElementById("name").value,
       username: document.getElementById("username").value,
       email: document.getElementById("email").value,
-      password: document.getElementById("password").value
+      password: document.getElementById("password").value,
     });
 
     xhr.send(info);
-
-    setTimeout(() => {
-      window.location = "/";
-    }, 2500);
   }
-
   // forma alternativa de mandar info con fetch api
   // const url = '/users';
   // const data = {
@@ -159,32 +166,63 @@ function sendLoginData() {
 
   xhr.setRequestHeader("Accept", "application/json");
   xhr.setRequestHeader("Content-Type", "application/json");
-  
-  const invalidUser = document.getElementById('invalid-user');
-  const flexCheckOut = document.getElementById('flexCheckout');
-  
-  invalidUser.style.display = 'd-none';
+
+  const invalidUser = document.getElementById("invalid-user");
+
+  invalidUser.style.display = "d-none";
 
   xhr.onreadystatechange = () => {
     if (xhr.readyState == 4 && xhr.status == 200) {
       console.log("status", xhr.status);
-      window.location = '/';
-
-      if(flexCheckOut.checked == true){
-
-      }
-
-    } else if(xhr.readyState == 4 && xhr.status == 401){
-      invalidUser.classList.remove('d-none');
+      // console.log(JSON.parse(localStorage.token))
+      // window.location = "/";
+    } else if (xhr.readyState == 4 && xhr.status == 401) {
+      invalidUser.classList.remove("d-none");
     }
   };
 
   const data = JSON.stringify({
     username: document.getElementById("username").value,
-    password: document.getElementById("password").value
+    password: document.getElementById("password").value,
   });
 
   xhr.send(data);
+}
+
+function eraseAccount() {
+  event.preventDefault();
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/profile");
+
+  xhr.setRequestHeader("Accept", "application/json");
+  xhr.setRequestHeader("Content-Type", "application/json");
+
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+
+    }
+  }
+
+  localStorage.removeItem("account");
+  window.location.href = "/register";
+}
+
+if (window.location.pathname == "/users") {
+  window.onload = function userTable() {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/users");
+
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+      }
+    };
+
+    console.log(xhr.response);
+  };
 }
 
 // (function dynamicTitle() {
@@ -208,20 +246,4 @@ function sendLoginData() {
 //       title.innerHTML = `${title.innerText} | HOME`;
 //       document.title = "Home";
 //   }
-// })();
-
-function eraseAccount() {
-  localStorage.removeItem("account");
-  window.location.href = "/register";
-}
-
-// (function isLogged() {
-//   if (
-//     localStorage.getItem("account") === null &&
-//     window.location.pathname !== "/register" &&
-//     window.location.pathname !== '/'
-//   ) {
-//     window.location.replace("/register");
-//   }
-//   // console.log(JSON.parse(localStorage.getItem("account")).name);
 // })();
