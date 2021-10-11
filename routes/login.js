@@ -11,9 +11,11 @@ module.exports = (app) => {
 
   app.post("/login", async (req, res) => {
     try {
+      const { username, password } = req.body;
+
       const user = {
-        username: req.body.username,
-        password: req.body.password
+        username,
+        password
       };
       const findUser = await User.findOne({ username: user.username });
 
@@ -22,18 +24,14 @@ module.exports = (app) => {
       }
 
       if (await bcrypt.compare(user.password, findUser.password)) {
-        const accessToken = jwt.sign(
-          user,
-          process.env.ACCESS_TOKEN_SECRET,
-          {
-            expiresIn: "1m",
-          }
-        );
+        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn: "30m"
+        });
         const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
-
-        res
-          .status(200)
-          .json({ accessToken: accessToken, refreshToken: refreshToken });
+        res.status(200).json({
+          accessToken: accessToken,
+          refreshToken: refreshToken
+        });
       } else {
         res.status(401).json("wrong email or password");
       }
@@ -50,7 +48,7 @@ function generateAccessToken(user) {
     user,
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "20s",
+      expiresIn: "20s"
     },
     (err, token) => {
       if (err) {

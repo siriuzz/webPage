@@ -1,0 +1,23 @@
+<tr>
+  <th scope="row"><%= i + 1 %></th>
+  <td><%= user.name %></td>
+  <td><%= user.username %></td>
+  <td class="d-flex justify-content-between">
+    <%= user.email %>
+    <div class="btn-group">
+      <a
+        href="#"
+        role="button"
+        id="dropdownMenuLink"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        ><i class="bi bi-three-dots"></i
+      ></a>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">Action</a></li>
+        <li><a class="dropdown-item" href="#">Another action</a></li>
+        <li><a class="dropdown-item" href="#">Something else here</a></li>
+      </ul>
+    </div>
+  </td>
+</tr>

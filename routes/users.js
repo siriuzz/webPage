@@ -1,31 +1,24 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 
 module.exports = (app) => {
   //renderiza la pagina de users al ir a esa direccion
-  app.get("/users",checkToken, async (req, res) => {
-    jwt.verify(req.token, process.env.ACCESS_TOKEN_SECRET, async (err, authData) => {
-      if (err) {
-        console.log("ERROR: Could not connect to the protected route");
-        res.sendStatus(403);
-      } else {
-        res.json({
-          message: "Successful log in",
-          authData
-          
-        });
-        console.log("SUCCESS: Connected to protected route");
+  app.get("/users", async (req, res) => {
+    res.render("users.ejs", { title: "Users" });
+  });
 
-        const findAllUsers = await User.find();
+  app.get("/get-users", checkToken, async (req, res) => {
 
-        res.render("users.ejs", { title: "Users", users: findAllUsers });
-      }
+    const findAllUsers = await User.find();
+
+    res.status(200).json({
+      title: "Users",
+      users: findAllUsers
     });
+    
   });
 
   app.post("/users", (req, res) => {
-
-
     // send data mongodb
     // (function () {
     // const { MongoClient } = require('mongodb');
@@ -86,14 +79,33 @@ module.exports = (app) => {
 
 const checkToken = (req, res, next) => {
   const header = req.headers["authorization"];
-  console.log(header);
+  console.log(req.headers);
 
   if (typeof header !== "undefined") {
     const bearer = header.split(" ");
     const token = bearer[1];
 
     req.token = token;
-    next();
+
+    jwt.verify(
+      req.token,
+      process.env.ACCESS_TOKEN_SECRET,
+      async (err, authData) => {
+        if (err) {
+          console.log("ERROR: Could not connect to the protected route");
+          res.sendStatus(403);
+        } else {
+          // res.json({
+          //   message: "Successful log in",
+          //   authData
+          // });
+          // console.log(authData);
+          // console.log("SUCCESS: Connected to protected route");
+
+          next();
+        }
+      }
+    );
   } else {
     //If header is undefined return Forbidden (403)
     res.sendStatus(403);

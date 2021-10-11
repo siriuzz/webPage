@@ -1,12 +1,65 @@
 (function isLogged() {
-  if (
-    localStorage.getItem("account") === null &&
-    window.location.pathname !== "/register" &&
-    window.location.pathname !== "/"
-  ) {
-    window.location.replace("/register");
+  if (window.location.pathname == "/users") {
+    // event.preventDefault();
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/get-users");
+
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Accept", "application/json");
+    const accessToken = JSON.parse(localStorage.getItem("tokens")).accessToken;
+    const refreshToken = JSON.parse(
+      localStorage.getItem("tokens")
+    ).refreshToken;
+
+    xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        console.log("status", xhr.status);
+
+        const usersList = JSON.parse(xhr.response).users;
+
+        fillData(usersList);
+      }
+    };
+
+    xhr.send();
   }
 })();
+
+function fillData(users) {
+  const tableBody = document.getElementById("tableBody");
+
+  users.forEach((user, i) => {
+    tableBody.insertAdjacentHTML(
+      "afterbegin",
+      `<tr>
+          <th scope="row">${i}</th>
+          <td>${user.name}</td>
+          <td>${user.username}</td>
+          <td class="d-flex justify-content-between">
+          ${user.email}
+          <div class="btn-group">
+            <a
+              href="#"
+              role="button"
+              id="dropdownMenuLink"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              ><i class="bi bi-three-dots"></i
+            ></a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </div>
+          </td>
+        </tr>
+      `
+    );
+  });
+}
 
 //confirma que el mensaje se envio correctamente
 function confirmation() {
@@ -111,7 +164,7 @@ function sendRegisterData() {
             name: document.getElementById("name").value,
             username: document.getElementById("username").value,
             email: document.getElementById("email").value,
-            password: document.getElementById("password").value,
+            password: document.getElementById("password").value
           })
         );
       } else if (xhr.readyState == 4 && xhr.status == 401) {
@@ -127,7 +180,7 @@ function sendRegisterData() {
       name: document.getElementById("name").value,
       username: document.getElementById("username").value,
       email: document.getElementById("email").value,
-      password: document.getElementById("password").value,
+      password: document.getElementById("password").value
     });
 
     xhr.send(info);
@@ -150,8 +203,13 @@ function sendLoginData() {
   xhr.onreadystatechange = () => {
     if (xhr.readyState == 4 && xhr.status == 200) {
       console.log("status", xhr.status);
-      // console.log(JSON.parse(localStorage.token))
-      // window.location = "/";
+      localStorage.setItem(
+        "tokens",
+        JSON.stringify({
+          accessToken: JSON.parse(xhr.response).accessToken,
+          refreshToken: JSON.parse(xhr.response).refreshToken
+        })
+      );
     } else if (xhr.readyState == 4 && xhr.status == 401) {
       invalidUser.classList.remove("d-none");
     }
@@ -159,7 +217,7 @@ function sendLoginData() {
 
   const data = JSON.stringify({
     username: document.getElementById("username").value,
-    password: document.getElementById("password").value,
+    password: document.getElementById("password").value
   });
 
   xhr.send(data);
@@ -176,30 +234,27 @@ function eraseAccount() {
 
   xhr.onreadystatechange = () => {
     if (xhr.readyState == 4 && xhr.status == 200) {
-
     }
-  }
+  };
 
   localStorage.removeItem("account");
   window.location.href = "/register";
 }
 
-if (window.location.pathname == "/users") {
-  window.onload = function userTable() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/users");
+// if (window.location.pathname == "/users") {
+//   window.onload = function userTable() {
+//     const xhr = new XMLHttpRequest();
+//     xhr.open("GET", "/users");
 
-    xhr.setRequestHeader("Accept", "application/json");
-    xhr.setRequestHeader("Content-Type", "application/json");
+//     xhr.setRequestHeader("Accept", "application/json");
+//     xhr.setRequestHeader("Content-Type", "application/json");
 
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-      }
-    };
-
-    console.log(xhr.response);
-  };
-}
+//     xhr.onreadystatechange = () => {
+//       if (xhr.readyState == 4 && xhr.status == 200) {
+//       }
+//     };
+//   };
+// }
 
 // (function dynamicTitle() {
 //   let title = document.getElementById("title");
