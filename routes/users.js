@@ -1,13 +1,26 @@
+const jwt = require('jsonwebtoken')
 const User = require("../models/userModel");
 
 module.exports = (app) => {
   //renderiza la pagina de users al ir a esa direccion
-  app.get("/users", async (req, res) => {
-    console.log(await User.find())
-    const findAllUsers = await User.find();
+  app.get("/users",checkToken, async (req, res) => {
+    jwt.verify(req.token, process.env.ACCESS_TOKEN_SECRET, async (err, authData) => {
+      if (err) {
+        console.log("ERROR: Could not connect to the protected route");
+        res.sendStatus(403);
+      } else {
+        res.json({
+          message: "Successful log in",
+          authData
+          
+        });
+        console.log("SUCCESS: Connected to protected route");
 
-    res.render("users.ejs", { title: 'Users', users: findAllUsers });
-    
+        const findAllUsers = await User.find();
+
+        res.render("users.ejs", { title: "Users", users: findAllUsers });
+      }
+    });
   });
 
   app.post("/users", (req, res) => {
@@ -69,4 +82,20 @@ module.exports = (app) => {
     //   const apellido = document.getElementById("apellido").value;
     // }
   });
+};
+
+const checkToken = (req, res, next) => {
+  const header = req.headers["authorization"];
+  console.log(header);
+
+  if (typeof header !== "undefined") {
+    const bearer = header.split(" ");
+    const token = bearer[1];
+
+    req.token = token;
+    next();
+  } else {
+    //If header is undefined return Forbidden (403)
+    res.sendStatus(403);
+  }
 };

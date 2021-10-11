@@ -132,30 +132,6 @@ function sendRegisterData() {
 
     xhr.send(info);
   }
-  // forma alternativa de mandar info con fetch api
-  // const url = '/users';
-  // const data = {
-  //   "nombre": document.getElementById('nombre').value,
-  //   "apellido": document.getElementById('apellido').value
-  // };
-
-  // fetch(url,{
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify(data)
-  // })
-  // .then(response => {
-  //   response.json();
-  //   if(response.status == 200){
-  //     window.location = '/'
-  //     console.log('if')
-  //   }
-  // })
-  // .catch(error=> {
-  //   console.log('Error:', error)
-  // });
 }
 
 function sendLoginData() {
