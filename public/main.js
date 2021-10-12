@@ -31,33 +31,86 @@ function fillData(users) {
   const tableBody = document.getElementById("tableBody");
 
   users.forEach((user, i) => {
-    tableBody.insertAdjacentHTML(
-      "afterbegin",
-      `<tr>
-          <th scope="row">${i}</th>
-          <td>${user.name}</td>
-          <td>${user.username}</td>
-          <td class="d-flex justify-content-between">
-          ${user.email}
-          <div class="btn-group">
-            <a
-              href="#"
-              role="button"
-              id="dropdownMenuLink"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-              ><i class="bi bi-three-dots"></i
-            ></a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </div>
-          </td>
-        </tr>
-      `
-    );
+    //creacion
+    //row
+    const tableRow = document.createElement("tr");
+
+    //conteo de usuarios
+    const tableHeaderIndex = document.createElement("th");
+    tableHeaderIndex.scope = "row";
+    tableHeaderIndex.innerHTML = i + 1;
+
+    //name
+    const tableDataName = document.createElement("td");
+    tableDataName.innerHTML = user.name;
+
+    //username
+    const tableDataUsername = document.createElement("td");
+    tableDataUsername.innerHTML = user.username;
+
+    //email
+    const tableDataEmail = document.createElement("td");
+    tableDataEmail.innerHTML = user.email;
+
+    //buttons
+    const tableDataButtons = document.createElement("td");
+
+    const unorderedListButtons = document.createElement("ul");
+    unorderedListButtons.classList.add("list-inline");
+    unorderedListButtons.classList.add("m-0");
+
+    const listItemEdit = document.createElement("li");
+    listItemEdit.classList.add("list-inline-item");
+
+    const buttonEdit = document.createElement("button");
+    buttonEdit.classList.add("btn");
+    buttonEdit.classList.add("btn-success");
+    buttonEdit.classList.add("btn-sm");
+    buttonEdit.classList.add("rounded-0");
+    buttonEdit.type = "button";
+    buttonEdit.setAttribute("data-toggle", "tooltip");
+    buttonEdit.setAttribute("data-placement", "top");
+    buttonEdit.title = "Edit";
+
+    const iconEdit = document.createElement("i");
+    iconEdit.classList.add("bi");
+    iconEdit.classList.add("bi-pencil");
+
+    const listItemDelete = document.createElement("li");
+    listItemDelete.classList.add("list-inline-item");
+
+    const buttonDelete = document.createElement("button");
+    buttonDelete.classList.add("btn");
+    buttonDelete.classList.add("btn-danger");
+    buttonDelete.classList.add("btn-sm");
+    buttonDelete.classList.add("rounded-0");
+    buttonDelete.type = "button";
+    buttonDelete.setAttribute("data-toggle", "tooltip");
+    buttonDelete.setAttribute("data-placement", "top");
+    buttonDelete.title = "Delete";
+
+    const iconDelete = document.createElement("i");
+    iconDelete.classList.add("bi");
+    iconDelete.classList.add("bi-trash");
+
+    //buttons structure
+    tableDataButtons.insertAdjacentElement("beforeend", unorderedListButtons);
+
+    unorderedListButtons.insertAdjacentElement("beforeend", listItemEdit);
+    listItemEdit.insertAdjacentElement("beforeend", buttonEdit);
+    buttonEdit.insertAdjacentElement("beforeend", iconEdit);
+
+    unorderedListButtons.insertAdjacentElement("beforeend", listItemDelete);
+    listItemDelete.insertAdjacentElement("beforeend", buttonDelete);
+    buttonDelete.insertAdjacentElement("beforeend", iconDelete);
+
+    //insertion
+    tableBody.insertAdjacentElement("beforeend", tableRow);
+    tableRow.insertAdjacentElement("beforeend", tableHeaderIndex);
+    tableRow.insertAdjacentElement("beforeend", tableDataName);
+    tableRow.insertAdjacentElement("beforeend", tableDataUsername);
+    tableRow.insertAdjacentElement("beforeend", tableDataEmail);
+    tableRow.insertAdjacentElement("beforeend", tableDataButtons);
   });
 }
 

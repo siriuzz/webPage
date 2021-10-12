@@ -79,7 +79,6 @@ module.exports = (app) => {
 
 const checkToken = (req, res, next) => {
   const header = req.headers["authorization"];
-  console.log(req.headers);
 
   if (typeof header !== "undefined") {
     const bearer = header.split(" ");
