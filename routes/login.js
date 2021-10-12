@@ -25,7 +25,7 @@ module.exports = (app) => {
 
       if (await bcrypt.compare(user.password, findUser.password)) {
         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-          expiresIn: "30m"
+          expiresIn: "30s"
         });
         const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
         res.status(200).json({

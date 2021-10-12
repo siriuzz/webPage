@@ -18,7 +18,7 @@ module.exports = (app) => {
     
   });
 
-  app.post("/users", (req, res) => {
+  app.post("/edit-users", (req, res) => {
     // send data mongodb
     // (function () {
     // const { MongoClient } = require('mongodb');
@@ -69,19 +69,14 @@ module.exports = (app) => {
     //   .on("error", (error) => {
     //     console.log("Error:", error);
     //   });
-    // cambiar titulo de la pagina
-    // async function userDisplay() {
-    //   const nombre = document.getElementById("nombre").value;
-    //   const apellido = document.getElementById("apellido").value;
-    // }
   });
 };
 
 const checkToken = (req, res, next) => {
-  const header = req.headers["authorization"];
+  const headers = req.headers["authorization"];
 
-  if (typeof header !== "undefined") {
-    const bearer = header.split(" ");
+  if (typeof headers !== "undefined") {
+    const bearer = headers.split(" ");
     const token = bearer[1];
 
     req.token = token;

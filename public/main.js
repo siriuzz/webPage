@@ -1,29 +1,64 @@
+function httpRequest(method, url, data, callback) {
+  if (method == "GET") {
+    superagent
+      .get(url)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .end(callback);
+  } else if (method == "POST") {
+    superagent
+      .post(url)
+      .send(data) // sends a JSON post body
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .end(callback);
+  } else if (method == "DELETE") {
+    superagent
+      .del(url)
+      .send(data) // sends a JSON post body
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .end(callback);
+  }
+}
+
+function saveAccount() {
+  localStorage.setItem(
+    "account",
+    JSON.stringify({
+      name: document.getElementById("name").value,
+      username: document.getElementById("username").value,
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  );
+}
+
 (function isLogged() {
   if (window.location.pathname == "/users") {
     // event.preventDefault();
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/get-users");
-
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.setRequestHeader("Accept", "application/json");
     const accessToken = JSON.parse(localStorage.getItem("tokens")).accessToken;
     const refreshToken = JSON.parse(
       localStorage.getItem("tokens")
     ).refreshToken;
 
-    xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-        console.log("status", xhr.status);
-
-        const usersList = JSON.parse(xhr.response).users;
+    const callback = (err, res) => {
+      if (err) {
+        console.log("status", res.xhr.status);
+      } else {
+        console.log("status", res.xhr.status);
+        const usersList = JSON.parse(res.xhr.response).users;
 
         fillData(usersList);
       }
     };
 
-    xhr.send();
+    superagent
+      .get("/get-users")
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .end(callback);
   }
 })();
 
@@ -114,6 +149,18 @@ function fillData(users) {
   });
 }
 
+//users buttons
+function editUser() {
+  event.preventDefault();
+
+  const callback = (err, res) => {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      console.log("status", res.statusCode);
+    }
+  };
+  // httpRequest('POST', '/edit-user', )
+}
+
 //confirma que el mensaje se envio correctamente
 function confirmation() {
   const returnLink = document.createElement("a");
@@ -196,36 +243,23 @@ function sendRegisterData() {
   }
 
   if (password == repeatPassword && password.length >= 8) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/register");
-
-    xhr.setRequestHeader("Accept", "application/json");
-    xhr.setRequestHeader("Content-Type", "application/json");
-
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-        console.log("status", xhr.status);
-        document.getElementById("register-title").innerHTML =
-          "Cuenta creada exitosamente";
-        setTimeout(() => {
-          window.location = "/";
-        }, 2500);
-
-        localStorage.setItem(
-          "account",
-          JSON.stringify({
-            name: document.getElementById("name").value,
-            username: document.getElementById("username").value,
-            email: document.getElementById("email").value,
-            password: document.getElementById("password").value
-          })
-        );
-      } else if (xhr.readyState == 4 && xhr.status == 401) {
-        const error = JSON.parse(xhr.response).error;
+    const callback = (err, res) => {
+      if (err) {
+        const error = JSON.parse(res.xhr.response).error;
         error.forEach((e) => {
           document.getElementById(e.field).classList.remove("d-none");
           document.getElementById(e.field).innerHTML = e.text;
         });
+      } else {
+        console.log("status", res.statusCode);
+        document.getElementById("register-title").innerHTML =
+          "Cuenta creada exitosamente";
+
+        saveAccount();
+
+        setTimeout(() => {
+          window.location = "/";
+        }, 2500);
       }
     };
 
@@ -236,62 +270,91 @@ function sendRegisterData() {
       password: document.getElementById("password").value
     });
 
-    xhr.send(info);
+    httpRequest("POST", "/register", info, callback);
   }
 }
 
 function sendLoginData() {
   event.preventDefault();
 
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", "/login");
-
-  xhr.setRequestHeader("Accept", "application/json");
-  xhr.setRequestHeader("Content-Type", "application/json");
-
   const invalidUser = document.getElementById("invalid-user");
 
   invalidUser.style.display = "d-none";
-
-  xhr.onreadystatechange = () => {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      console.log("status", xhr.status);
-      localStorage.setItem(
-        "tokens",
-        JSON.stringify({
-          accessToken: JSON.parse(xhr.response).accessToken,
-          refreshToken: JSON.parse(xhr.response).refreshToken
-        })
-      );
-    } else if (xhr.readyState == 4 && xhr.status == 401) {
-      invalidUser.classList.remove("d-none");
-    }
-  };
 
   const data = JSON.stringify({
     username: document.getElementById("username").value,
     password: document.getElementById("password").value
   });
 
-  xhr.send(data);
+  const callback = (err, res) => {
+    // Calling the end function will send the request
+    if (err) {
+      invalidUser.classList.remove("d-none");
+    } else {
+      localStorage.setItem(
+        "account",
+        JSON.stringify({
+          username: document.getElementById("username").value,
+          password: document.getElementById("password").value
+        })
+      );
+
+      localStorage.setItem(
+        "tokens",
+        JSON.stringify({
+          accessToken: JSON.parse(res.text).accessToken,
+          refreshToken: JSON.parse(res.text).refreshToken
+        })
+      );
+
+      setTimeout(() => {
+        window.location = "/users";
+      }, 1500);
+    }
+  };
+
+  httpRequest("POST", "/login", data, callback);
 }
 
 function eraseAccount() {
   event.preventDefault();
 
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", "/profile");
+  if (localStorage.getItem("account")) {
+    const callback = (err, res) => {
+      if (err) {
+        console.log(err);
+      } else {
+        localStorage.removeItem("account");
+        localStorage.removeItem("tokens");
+      }
+    };
 
-  xhr.setRequestHeader("Accept", "application/json");
-  xhr.setRequestHeader("Content-Type", "application/json");
+    const data = {
+      username: JSON.parse(localStorage.getItem("account")).username
+    };
 
-  xhr.onreadystatechange = () => {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-    }
-  };
+    httpRequest("DELETE", "/profile", data, callback);
+  }
+}
 
+function logOut() {
   localStorage.removeItem("account");
-  window.location.href = "/register";
+  localStorage.removeItem("tokens");
+  window.location.pathname = "/login";
+}
+
+if (localStorage.getItem("account")) {
+  const loginButton = document.getElementById("login-button");
+  const registerButton = document.getElementById("register-button");
+
+  loginButton.classList.add("d-none");
+  registerButton.classList.add("d-none");
+} else if (
+  !localStorage.getItem("account") &&
+  window.location.pathname != "/register" &&
+  window.location.pathname != "/login"
+) {
+  window.location.pathname = "/register";
 }
 
 // if (window.location.pathname == "/users") {
