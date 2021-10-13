@@ -100,7 +100,7 @@ const checkToken = (req, res, next) => {
         }
       }
     );
-  } else {
+  }  else {
     //If header is undefined return Forbidden (403)
     res.sendStatus(403);
   }

@@ -24,13 +24,12 @@ module.exports = (app) => {
       }
 
       if (await bcrypt.compare(user.password, findUser.password)) {
-        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-          expiresIn: "30s"
+        const findAllUsers = User.find();
+        const accessToken = jwt.sign(findAllUsers, process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn: "30m"
         });
-        const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
         res.status(200).json({
-          accessToken: accessToken,
-          refreshToken: refreshToken
+          accessToken: accessToken
         });
       } else {
         res.status(401).json("wrong email or password");
@@ -42,19 +41,3 @@ module.exports = (app) => {
     }
   });
 };
-
-function generateAccessToken(user) {
-  return jwt.sign(
-    user,
-    process.env.ACCESS_TOKEN_SECRET,
-    {
-      expiresIn: "20s"
-    },
-    (err, token) => {
-      if (err) {
-        console.log("ocurrio un error", err);
-      }
-      res.send(token);
-    }
-  );
-}

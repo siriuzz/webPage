@@ -35,12 +35,9 @@ function saveAccount() {
 }
 
 (function isLogged() {
-  if (window.location.pathname == "/users") {
+  if (window.location.pathname == "/users" && localStorage.getItem("tokens")) {
     // event.preventDefault();
     const accessToken = JSON.parse(localStorage.getItem("tokens")).accessToken;
-    const refreshToken = JSON.parse(
-      localStorage.getItem("tokens")
-    ).refreshToken;
 
     const callback = (err, res) => {
       if (err) {
@@ -91,61 +88,74 @@ function fillData(users) {
     const tableDataButtons = document.createElement("td");
 
     const unorderedListButtons = document.createElement("ul");
-    unorderedListButtons.classList.add("list-inline");
-    unorderedListButtons.classList.add("m-0");
+    unorderedListButtons.className = "list-inline m-0";
 
     const listItemEdit = document.createElement("li");
     listItemEdit.classList.add("list-inline-item");
 
     const buttonEdit = document.createElement("button");
-    buttonEdit.classList.add("btn");
-    buttonEdit.classList.add("btn-success");
-    buttonEdit.classList.add("btn-sm");
-    buttonEdit.classList.add("rounded-0");
+    buttonEdit.className = "btn btn-success btn-sm rounded-0";
     buttonEdit.type = "button";
     buttonEdit.setAttribute("data-toggle", "tooltip");
     buttonEdit.setAttribute("data-placement", "top");
     buttonEdit.title = "Edit";
 
     const iconEdit = document.createElement("i");
-    iconEdit.classList.add("bi");
-    iconEdit.classList.add("bi-pencil");
+    iconEdit.className = "bi bi-pencil";
 
     const listItemDelete = document.createElement("li");
     listItemDelete.classList.add("list-inline-item");
 
     const buttonDelete = document.createElement("button");
-    buttonDelete.classList.add("btn");
-    buttonDelete.classList.add("btn-danger");
-    buttonDelete.classList.add("btn-sm");
-    buttonDelete.classList.add("rounded-0");
+    buttonDelete.className = "btn btn-danger btn-sm rounded-0";
     buttonDelete.type = "button";
     buttonDelete.setAttribute("data-toggle", "tooltip");
     buttonDelete.setAttribute("data-placement", "top");
     buttonDelete.title = "Delete";
 
     const iconDelete = document.createElement("i");
-    iconDelete.classList.add("bi");
-    iconDelete.classList.add("bi-trash");
+    iconDelete.className = "bi bi-trash";
 
     //buttons structure
-    tableDataButtons.insertAdjacentElement("beforeend", unorderedListButtons);
+    const editButtonArray = [
+      tableDataButtons,
+      unorderedListButtons,
+      listItemEdit,
+      buttonEdit,
+      iconEdit
+    ];
+    const deleteButtonArray = [
+      tableDataButtons,
+      unorderedListButtons,
+      listItemDelete,
+      buttonDelete,
+      iconDelete
+    ];
 
-    unorderedListButtons.insertAdjacentElement("beforeend", listItemEdit);
-    listItemEdit.insertAdjacentElement("beforeend", buttonEdit);
-    buttonEdit.insertAdjacentElement("beforeend", iconEdit);
+    editButtonArray.reduce((acc, cur) => {
+      acc.insertAdjacentElement("beforeend", cur);
+      return cur;
+    });
 
-    unorderedListButtons.insertAdjacentElement("beforeend", listItemDelete);
-    listItemDelete.insertAdjacentElement("beforeend", buttonDelete);
-    buttonDelete.insertAdjacentElement("beforeend", iconDelete);
+    deleteButtonArray.reduce((acc, cur) => {
+      acc.insertAdjacentElement("beforeend", cur);
+      return cur;
+    });
 
     //insertion
     tableBody.insertAdjacentElement("beforeend", tableRow);
     tableRow.insertAdjacentElement("beforeend", tableHeaderIndex);
-    tableRow.insertAdjacentElement("beforeend", tableDataName);
-    tableRow.insertAdjacentElement("beforeend", tableDataUsername);
-    tableRow.insertAdjacentElement("beforeend", tableDataEmail);
-    tableRow.insertAdjacentElement("beforeend", tableDataButtons);
+    const tableRowArray = [
+      tableHeaderIndex,
+      tableDataName,
+      tableDataUsername,
+      tableDataEmail,
+      tableDataButtons
+    ];
+
+    tableRowArray.reduce((acc, cur) => {
+      tableRow.insertAdjacentElement("beforeend", cur);
+    });
   });
 }
 
@@ -245,6 +255,7 @@ function sendRegisterData() {
   if (password == repeatPassword && password.length >= 8) {
     const callback = (err, res) => {
       if (err) {
+        console.log(res);
         const error = JSON.parse(res.xhr.response).error;
         error.forEach((e) => {
           document.getElementById(e.field).classList.remove("d-none");
@@ -252,14 +263,41 @@ function sendRegisterData() {
         });
       } else {
         console.log("status", res.statusCode);
-        document.getElementById("register-title").innerHTML =
-          "Cuenta creada exitosamente";
+        if (window.location.pathname == "/register") {
+          document.getElementById("register-title").innerHTML =
+            "Cuenta creada exitosamente";
+
+          localStorage.setItem(
+            "tokens",
+            JSON.stringify({
+              accessToken: JSON.parse(res.text).accessToken
+            })
+          );
+
+          setTimeout(() => {
+            window.location = "/";
+          }, 2500);
+        } else if (window.location.pathname == "/users") {
+          const modal = bootstrap.Modal.getInstance(
+            document.getElementById("staticBackdrop")
+          );
+          modal.hide();
+
+          //agrega nueva fila al crear usuario
+          const tableBody = document.getElementById("tableBody");
+          const rowCount = tableBody.childElementCount;
+
+          const newRow = tableBody.insertRow(rowCount + 1);
+          tableBody.appendChild(newRow)
+
+          const user = {
+            name: JSON.parse(res.text).name,
+            username: JSON.parse(res.text).username,
+            email: JSON.parse(res.text).email
+          };
+        }
 
         saveAccount();
-
-        setTimeout(() => {
-          window.location = "/";
-        }, 2500);
       }
     };
 
@@ -302,8 +340,7 @@ function sendLoginData() {
       localStorage.setItem(
         "tokens",
         JSON.stringify({
-          accessToken: JSON.parse(res.text).accessToken,
-          refreshToken: JSON.parse(res.text).refreshToken
+          accessToken: JSON.parse(res.text).accessToken
         })
       );
 
@@ -317,8 +354,6 @@ function sendLoginData() {
 }
 
 function eraseAccount() {
-  event.preventDefault();
-
   if (localStorage.getItem("account")) {
     const callback = (err, res) => {
       if (err) {
@@ -326,6 +361,9 @@ function eraseAccount() {
       } else {
         localStorage.removeItem("account");
         localStorage.removeItem("tokens");
+        setTimeout(() => {
+          window.location.pathname = "/register";
+        }, 1000);
       }
     };
 

@@ -8,7 +8,6 @@ module.exports = (app) => {
 
   app.delete("/profile", async (req, res) => {
     try {
-      console.log(req.body.username)
       const username = req.body.username;
       await User.deleteOne({ username: username });
 
