@@ -8,14 +8,25 @@ module.exports = (app) => {
   });
 
   app.get("/get-users", checkToken, async (req, res) => {
-
     const findAllUsers = await User.find();
 
     res.status(200).json({
       title: "Users",
       users: findAllUsers
     });
-    
+  });
+
+  app.delete("/users/id", async (req, res) => {
+    console.log('klk')
+    try {
+      const _id = req.body._id;
+
+      await User.deleteOne({ _id: _id });
+      res.status(200).json({ result: "user deleted"});
+
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   app.post("/edit-users", (req, res) => {
@@ -100,7 +111,7 @@ const checkToken = (req, res, next) => {
         }
       }
     );
-  }  else {
+  } else {
     //If header is undefined return Forbidden (403)
     res.sendStatus(403);
   }

@@ -8,14 +8,14 @@ function httpRequest(method, url, data, callback) {
   } else if (method == "POST") {
     superagent
       .post(url)
-      .send(data) // sends a JSON post body
+      .send(data)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
       .end(callback);
   } else if (method == "DELETE") {
     superagent
       .del(url)
-      .send(data) // sends a JSON post body
+      .send(data)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
       .end(callback);
@@ -26,18 +26,15 @@ function saveAccount() {
   localStorage.setItem(
     "account",
     JSON.stringify({
-      name: document.getElementById("name").value,
-      username: document.getElementById("username").value,
-      email: document.getElementById("email").value,
-      password: document.getElementById("password").value
+      username: document.getElementById("username").value
     })
   );
 }
 
 (function isLogged() {
-  if (window.location.pathname == "/users" && localStorage.getItem("tokens")) {
+  if (window.location.pathname == "/users" && localStorage.getItem("token")) {
     // event.preventDefault();
-    const accessToken = JSON.parse(localStorage.getItem("tokens")).accessToken;
+    const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
 
     const callback = (err, res) => {
       if (err) {
@@ -59,6 +56,35 @@ function saveAccount() {
   }
 })();
 
+function getRowId(id) {
+  // console.log(event.target);
+  if (id) {
+    const createUserModal = document.getElementById("deleteModal");
+    createUserModal.setAttribute("row-id", id);
+  } else {
+    const callback = (err, res) => {
+      if (err) {
+        console.log(err);
+      } else {
+        const modal = document.getElementById("deleteModal");
+        rowId = modal.getAttribute("row-id");
+        const row = document.getElementById(rowId);
+        row.remove();
+  
+        const bsModal = bootstrap.Modal.getInstance(modal);
+        bsModal.hide();
+      }
+    };
+  
+    const data = {
+      _id: id
+    };
+  
+    httpRequest("DELETE", "/users/id", data, callback);
+  }
+
+}
+
 function fillData(users) {
   const tableBody = document.getElementById("tableBody");
   users.forEach((user, index) => {
@@ -69,12 +95,15 @@ function fillData(users) {
     //conteo de usuarios
     const tableHeaderIndex = document.createElement("th");
     tableHeaderIndex.scope = "row";
-    if (users.length == 1) {
-      tableHeaderIndex.innerHTML = tableBody.childElementCount;
-    } else {
-      tableHeaderIndex.innerHTML = index + 1;
-    }
 
+    tableHeaderIndex.innerHTML = index + 1;
+
+    //id
+    const tableHeaderId = document.createElement("td");
+    tableHeaderId.innerHTML = user._id;
+
+    //row index
+    tableRow.id = tableHeaderId.innerHTML;
     //name
     const tableDataName = document.createElement("td");
     tableDataName.innerHTML = user.name;
@@ -114,6 +143,9 @@ function fillData(users) {
     buttonDelete.type = "button";
     buttonDelete.setAttribute("data-bs-toggle", "modal");
     buttonDelete.setAttribute("data-bs-target", "#deleteModal");
+    buttonDelete.addEventListener("click", () =>
+      getRowId(tableHeaderId.innerHTML)
+    );
     buttonDelete.title = "Delete";
 
     const iconDelete = document.createElement("i");
@@ -150,6 +182,7 @@ function fillData(users) {
     tableRow.insertAdjacentElement("beforeend", tableHeaderIndex);
     const tableRowArray = [
       tableHeaderIndex,
+      tableHeaderId,
       tableDataName,
       tableDataUsername,
       tableDataEmail,
@@ -271,7 +304,7 @@ function sendRegisterData() {
             "Cuenta creada exitosamente";
 
           localStorage.setItem(
-            "tokens",
+            "token",
             JSON.stringify({
               accessToken: JSON.parse(res.text).accessToken
             })
@@ -282,18 +315,14 @@ function sendRegisterData() {
           }, 2500);
         } else if (window.location.pathname == "/users") {
           const modal = bootstrap.Modal.getInstance(
-            document.getElementById("staticBackdrop")
+            document.getElementById("createModal")
           );
           modal.hide();
 
           //agrega nueva fila al crear usuario
-          const tableBody = document.getElementById("tableBody");
-          const rowCount = tableBody.childElementCount;
-
-          const newRow = tableBody.insertRow(-1);
-
           const user = [
             {
+              _id: JSON.parse(res.text)._id,
               name: JSON.parse(res.text).name,
               username: JSON.parse(res.text).username,
               email: JSON.parse(res.text).email
@@ -334,16 +363,10 @@ function sendLoginData() {
     if (err) {
       invalidUser.classList.remove("d-none");
     } else {
-      localStorage.setItem(
-        "account",
-        JSON.stringify({
-          username: document.getElementById("username").value,
-          password: document.getElementById("password").value
-        })
-      );
+      saveAccount();
 
       localStorage.setItem(
-        "tokens",
+        "token",
         JSON.stringify({
           accessToken: JSON.parse(res.text).accessToken
         })
@@ -358,14 +381,14 @@ function sendLoginData() {
   httpRequest("POST", "/login", data, callback);
 }
 
-function eraseAccount() {
+function deleteAccount() {
   if (localStorage.getItem("account")) {
     const callback = (err, res) => {
       if (err) {
         console.log(err);
       } else {
         localStorage.removeItem("account");
-        localStorage.removeItem("tokens");
+        localStorage.removeItem("token");
         setTimeout(() => {
           window.location.pathname = "/register";
         }, 1000);
@@ -382,26 +405,27 @@ function eraseAccount() {
 
 function logOut() {
   localStorage.removeItem("account");
-  localStorage.removeItem("tokens");
+  localStorage.removeItem("token");
   window.location.pathname = "/login";
 }
 
-if (
-  localStorage.getItem("account") &&
-  window.location.pathname != "/register"
-) {
-  const loginButton = document.getElementById("login-button");
-  const registerButton = document.getElementById("register-button");
+// if (
+//   localStorage.getItem("account") &&
+//   window.location.pathname != "/register"
+// ) {
+//   const loginButton = document.getElementById("login-button");
+//   const registerButton = document.getElementById("register-button");
 
-  loginButton.classList.add("d-none");
-  registerButton.classList.add("d-none");
-} else if (
-  !localStorage.getItem("account") &&
-  window.location.pathname != "/register" &&
-  window.location.pathname != "/login"
-) {
-  window.location.pathname = "/register";
-}
+//   loginButton.classList.add("d-none");
+//   registerButton.classList.add("d-none");
+// } else if (
+//   !localStorage.getItem("account") &&
+//   window.location.pathname != "/register" &&
+//   window.location.pathname != "/login"
+// ) {
+//   logOut();
+//   window.location.pathname = "/register";
+// }
 
 // if (window.location.pathname == "/users") {
 //   window.onload = function userTable() {

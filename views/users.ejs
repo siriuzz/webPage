@@ -1,4 +1,4 @@
-<body>
+
   <div
     class="modal fade"
     id="deleteModal"
@@ -10,7 +10,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalTitle">Modal title</h5>
+          <h5 class="modal-title" id="deleteModalTitle">Delete User</h5>
           <button
             type="button"
             class="btn-close"
@@ -20,29 +20,29 @@
             <span aria-hidden="true"></span>
           </button>
         </div>
-        <div class="modal-body">...</div>
+        <div class="modal-body">Are you sure you want to delete this user?</div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Close
+            Cancel
           </button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-primary" onclick="getRowId();">Yes</button>
         </div>
       </div>
     </div>
   </div>
   <div
     class="modal fade"
-    id="staticBackdrop"
+    id="createModal"
     data-bs-backdrop="static"
     data-bs-keyboard="false"
     tabindex="-1"
-    aria-labelledby="staticBackdropLabel"
+    aria-labelledby="createModalLabel"
     aria-hidden="true"
   >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Register</h5>
+          <h5 class="modal-title" id="createModalLabel">Register</h5>
           <button
             type="button"
             class="btn-close"
@@ -51,112 +51,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form method="POST">
-            <div class="input-group mb-3">
-              <span class="input-group-text bg-primary"
-                ><i class="bi bi-person-plus-fill text-white"></i
-              ></span>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Name"
-                id="name"
-              />
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text bg-primary"
-                ><i class="bi bi-person-plus-fill text-white"></i
-              ></span>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Username"
-                id="username"
-              />
-            </div>
-            <div
-              class="alert alert-danger d-none"
-              role="alert"
-              id="username-taken"
-            >
-              Username already in use
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text bg-primary"
-                ><i class="bi bi-envelope text-white"></i
-              ></span>
-              <input
-                type="email"
-                class="form-control"
-                placeholder="Email"
-                id="email"
-              />
-            </div>
-            <div
-              class="alert alert-danger d-none"
-              role="alert"
-              id="email-taken"
-            >
-              Email already in use
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text bg-primary"
-                ><i class="bi bi-key-fill text-white"></i
-              ></span>
-              <input
-                type="password"
-                class="form-control"
-                placeholder="Password"
-                id="password"
-              />
-              <div
-                class="input-group-addon border d-flex align-items-center"
-                tabindex="-1"
-              >
-                <a tabindex="-1" href onclick="showPassword()"
-                  ><i
-                    class="fa fa-eye-slash p-2"
-                    aria-hidden="true"
-                    id="eye1"
-                  ></i
-                ></a>
-              </div>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text bg-primary"
-                ><i class="bi bi-key-fill text-white"></i
-              ></span>
-              <input
-                type="password"
-                class="form-control"
-                placeholder="Repeat password"
-                id="repeat-password"
-              />
-              <div class="input-group-addon border d-flex align-items-center">
-                <a tabindex="-1" href onclick="showPassword()"
-                  ><i
-                    class="fa fa-eye-slash p-2"
-                    aria-hidden="true"
-                    id="eye2"
-                  ></i
-                ></a>
-              </div>
-            </div>
-            <div
-              class="alert alert-danger d-none"
-              role="alert"
-              id="password-error"
-            >
-              Passwords do not match
-            </div>
-            <div
-              class="alert alert-danger d-none"
-              role="alert"
-              id="invalid-password"
-            >
-              Password must be at least 8 characters long
-            </div>
-          </form>
+          <%- include("partials/register-form.ejs")  %> 
         </div>
         <div class="modal-footer">
           <button
@@ -184,7 +79,7 @@
         type="button"
         class="btn btn-primary"
         data-bs-toggle="modal"
-        data-bs-target="#staticBackdrop"
+        data-bs-target="#createModal"
       >
         Create User
       </button>
@@ -194,6 +89,7 @@
     <thead>
       <tr>
         <th scope="col">#</th>
+        <th scope="col">Id</th>
         <th scope="col">Name</th>
         <th scope="col">Username</th>
         <th scope="col">Email</th>
@@ -202,4 +98,4 @@
     </thead>
     <tbody id="tableBody"></tbody>
   </table>
-</body>
+

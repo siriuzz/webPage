@@ -19,10 +19,10 @@ module.exports = (app) => {
       };
       const findUser = await User.findOne({ username: user.username });
       const findUserObj = {
+        _id: findUser._id,
         name: findUser.name,
         username: findUser.username,
-        email: findUser.email,
-        password: findUser.password
+        email: findUser.email
       }
       if (!findUser) {
         return res.status(401).json("wrong email or password");
