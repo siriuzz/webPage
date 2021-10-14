@@ -61,8 +61,7 @@ function saveAccount() {
 
 function fillData(users) {
   const tableBody = document.getElementById("tableBody");
-
-  users.forEach((user, i) => {
+  users.forEach((user, index) => {
     //creacion
     //row
     const tableRow = document.createElement("tr");
@@ -70,7 +69,11 @@ function fillData(users) {
     //conteo de usuarios
     const tableHeaderIndex = document.createElement("th");
     tableHeaderIndex.scope = "row";
-    tableHeaderIndex.innerHTML = i + 1;
+    if (users.length == 1) {
+      tableHeaderIndex.innerHTML = tableBody.childElementCount;
+    } else {
+      tableHeaderIndex.innerHTML = index + 1;
+    }
 
     //name
     const tableDataName = document.createElement("td");
@@ -91,7 +94,7 @@ function fillData(users) {
     unorderedListButtons.className = "list-inline m-0";
 
     const listItemEdit = document.createElement("li");
-    listItemEdit.classList.add("list-inline-item");
+    listItemEdit.className = "list-inline-item";
 
     const buttonEdit = document.createElement("button");
     buttonEdit.className = "btn btn-success btn-sm rounded-0";
@@ -104,13 +107,13 @@ function fillData(users) {
     iconEdit.className = "bi bi-pencil";
 
     const listItemDelete = document.createElement("li");
-    listItemDelete.classList.add("list-inline-item");
+    listItemDelete.className = "list-inline-item";
 
     const buttonDelete = document.createElement("button");
     buttonDelete.className = "btn btn-danger btn-sm rounded-0";
     buttonDelete.type = "button";
-    buttonDelete.setAttribute("data-toggle", "tooltip");
-    buttonDelete.setAttribute("data-placement", "top");
+    buttonDelete.setAttribute("data-bs-toggle", "modal");
+    buttonDelete.setAttribute("data-bs-target", "#deleteModal");
     buttonDelete.title = "Delete";
 
     const iconDelete = document.createElement("i");
@@ -287,14 +290,16 @@ function sendRegisterData() {
           const tableBody = document.getElementById("tableBody");
           const rowCount = tableBody.childElementCount;
 
-          const newRow = tableBody.insertRow(rowCount + 1);
-          tableBody.appendChild(newRow)
+          const newRow = tableBody.insertRow(-1);
 
-          const user = {
-            name: JSON.parse(res.text).name,
-            username: JSON.parse(res.text).username,
-            email: JSON.parse(res.text).email
-          };
+          const user = [
+            {
+              name: JSON.parse(res.text).name,
+              username: JSON.parse(res.text).username,
+              email: JSON.parse(res.text).email
+            }
+          ];
+          fillData(user);
         }
 
         saveAccount();
@@ -381,7 +386,10 @@ function logOut() {
   window.location.pathname = "/login";
 }
 
-if (localStorage.getItem("account")) {
+if (
+  localStorage.getItem("account") &&
+  window.location.pathname != "/register"
+) {
   const loginButton = document.getElementById("login-button");
   const registerButton = document.getElementById("register-button");
 

@@ -1,25 +1,182 @@
 <body>
-  <!-- <div class="d-flex flex-column justify-content-center">
-    <h2 class="text-center" id="user-title">Crear Usuario</h2>
-    <form
-      method="POST"
-      action="/users"
-      class="w-25 m-auto d-flex flex-column text-center"
-    >
-      <label for="nombre">Nombre</label>
-      <input name="nombre" type="text" id="nombre" required /><br />
-      <label for="apellido">Apellido</label>
-      <input name="apellido" id="apellido" required />
-      <button
-        class="w-50 m-auto"
-        id="users-submit-button"
-        type="submit"
-        onclick="userDisplay()"
-      >
-        Crear
-      </button>
-    </form>
-  </div> -->
+  <div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="deleteModalTitle"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalTitle">Modal title</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="modal-body">...</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="staticBackdrop"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Register</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST">
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-primary"
+                ><i class="bi bi-person-plus-fill text-white"></i
+              ></span>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Name"
+                id="name"
+              />
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-primary"
+                ><i class="bi bi-person-plus-fill text-white"></i
+              ></span>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Username"
+                id="username"
+              />
+            </div>
+            <div
+              class="alert alert-danger d-none"
+              role="alert"
+              id="username-taken"
+            >
+              Username already in use
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-primary"
+                ><i class="bi bi-envelope text-white"></i
+              ></span>
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Email"
+                id="email"
+              />
+            </div>
+            <div
+              class="alert alert-danger d-none"
+              role="alert"
+              id="email-taken"
+            >
+              Email already in use
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-primary"
+                ><i class="bi bi-key-fill text-white"></i
+              ></span>
+              <input
+                type="password"
+                class="form-control"
+                placeholder="Password"
+                id="password"
+              />
+              <div
+                class="input-group-addon border d-flex align-items-center"
+                tabindex="-1"
+              >
+                <a tabindex="-1" href onclick="showPassword()"
+                  ><i
+                    class="fa fa-eye-slash p-2"
+                    aria-hidden="true"
+                    id="eye1"
+                  ></i
+                ></a>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-primary"
+                ><i class="bi bi-key-fill text-white"></i
+              ></span>
+              <input
+                type="password"
+                class="form-control"
+                placeholder="Repeat password"
+                id="repeat-password"
+              />
+              <div class="input-group-addon border d-flex align-items-center">
+                <a tabindex="-1" href onclick="showPassword()"
+                  ><i
+                    class="fa fa-eye-slash p-2"
+                    aria-hidden="true"
+                    id="eye2"
+                  ></i
+                ></a>
+              </div>
+            </div>
+            <div
+              class="alert alert-danger d-none"
+              role="alert"
+              id="password-error"
+            >
+              Passwords do not match
+            </div>
+            <div
+              class="alert alert-danger d-none"
+              role="alert"
+              id="invalid-password"
+            >
+              Password must be at least 8 characters long
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            onclick="sendRegisterData()"
+          >
+            Create
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <header class="w-75 m-auto">
     <div class="d-flex justify-content-between">
       <h2>Users List</h2>
@@ -31,149 +188,6 @@
       >
         Create User
       </button>
-      <div
-        class="modal fade"
-        id="staticBackdrop"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabindex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">Register</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form method="POST">
-                <div class="input-group mb-3">
-                  <span class="input-group-text bg-primary"
-                    ><i class="bi bi-person-plus-fill text-white"></i
-                  ></span>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Name"
-                    id="name"
-                  />
-                </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text bg-primary"
-                    ><i class="bi bi-person-plus-fill text-white"></i
-                  ></span>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Username"
-                    id="username"
-                  />
-                </div>
-                <div
-                  class="alert alert-danger d-none"
-                  role="alert"
-                  id="username-taken"
-                >
-                  Username already in use
-                </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text bg-primary"
-                    ><i class="bi bi-envelope text-white"></i
-                  ></span>
-                  <input
-                    type="email"
-                    class="form-control"
-                    placeholder="Email"
-                    id="email"
-                  />
-                </div>
-                <div
-                  class="alert alert-danger d-none"
-                  role="alert"
-                  id="email-taken"
-                >
-                  Email already in use
-                </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text bg-primary"
-                    ><i class="bi bi-key-fill text-white"></i
-                  ></span>
-                  <input
-                    type="password"
-                    class="form-control"
-                    placeholder="Password"
-                    id="password"
-                  />
-                  <div
-                    class="input-group-addon border d-flex align-items-center"
-                    tabindex="-1"
-                  >
-                    <a tabindex="-1" href onclick="showPassword()"
-                      ><i
-                        class="fa fa-eye-slash p-2"
-                        aria-hidden="true"
-                        id="eye1"
-                      ></i
-                    ></a>
-                  </div>
-                </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text bg-primary"
-                    ><i class="bi bi-key-fill text-white"></i></span
-                  >
-                  <input
-                    type="password"
-                    class="form-control"
-                    placeholder="Repeat password"
-                    id="repeat-password"
-                  />
-                  <div
-                    class="input-group-addon border d-flex align-items-center"
-                  >
-                    <a tabindex="-1" href onclick="showPassword()"
-                      ><i
-                        class="fa fa-eye-slash p-2"
-                        aria-hidden="true"
-                        id="eye2"
-                      ></i
-                    ></a>
-                  </div>
-                </div>
-                <div
-                  class="alert alert-danger d-none"
-                  role="alert"
-                  id="password-error"
-                >
-                  Passwords do not match
-                </div>
-                <div
-                  class="alert alert-danger d-none"
-                  role="alert"
-                  id="invalid-password"
-                >
-                  Password must be at least 8 characters long
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              <button type="button" class="btn btn-primary" onclick="sendRegisterData()">Create</button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </header>
   <table class="table table-hover w-75 m-auto">
