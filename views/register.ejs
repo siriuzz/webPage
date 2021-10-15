@@ -7,7 +7,7 @@
             <h3 class="text-primary" id="register-title">Create Account</h3>
           </div>
           <div class="p-4">
-            <form method="POST">
+            <form method="POST" action="/register" >
               <div class="input-group mb-3">
                 <span class="input-group-text bg-primary"
                   ><i class="bi bi-person-plus-fill text-white"></i
@@ -17,6 +17,7 @@
                   class="form-control"
                   placeholder="Name"
                   id="name"
+                  required
                 />
               </div>
               <div class="input-group mb-3">
@@ -28,6 +29,7 @@
                   class="form-control"
                   placeholder="Username"
                   id="username"
+                  required
                 />
               </div>
               <div
@@ -46,6 +48,7 @@
                   class="form-control"
                   placeholder="Email"
                   id="email"
+                  required
                 />
               </div>
               <div
@@ -64,6 +67,7 @@
                   class="form-control"
                   placeholder="Password"
                   id="password"
+                  required
                 />
                 <div
                   class="input-group-addon border d-flex align-items-center"
@@ -80,13 +84,14 @@
               </div>
               <div class="input-group mb-3">
                 <span class="input-group-text bg-primary"
-                  ><i class="bi bi-key-fill text-white"></i></span
-                >
+                  ><i class="bi bi-key-fill text-white"></i
+                ></span>
                 <input
                   type="password"
                   class="form-control"
                   placeholder="Repeat password"
                   id="repeat-password"
+                  required
                 />
                 <div class="input-group-addon border d-flex align-items-center">
                   <a tabindex="-1" href onclick="showPassword()"
@@ -115,17 +120,16 @@
               <div class="d-grid col-12 mx-auto">
                 <button
                   class="btn btn-primary"
-                  type="button"
+                  type="submit"
                   onclick="sendRegisterData()"
+
                 >
-                  <span></span> Sign up
+                  Sign up
                 </button>
               </div>
               <p class="text-center mt-3">
                 Already have an account?
-                <span class="text-primary"
-                  ><a href="/login">Log in</a></span
-                >
+                <span class="text-primary"><a href="/login">Log in</a></span>
               </p>
             </form>
           </div>

@@ -16,17 +16,23 @@ module.exports = (app) => {
     });
   });
 
-  app.delete("/users/id", async (req, res) => {
-    console.log('klk')
-    try {
-      const _id = req.body._id;
+  app.delete("/users/:_id", async (req, res) => {
+    const _id = req.body._id;
 
-      await User.deleteOne({ _id: _id });
-      res.status(200).json({ result: "user deleted"});
+    await User.deleteOne({ _id: _id });
+    res.status(200).json({ result: "user deleted" });
+  });
 
-    } catch (error) {
-      console.log(error);
-    }
+  app.put("/edit-user", async (req, res) => {
+    console.log(req.body)
+    const findAndUpdate = await User.findByIdAndUpdate(req.body._id, {
+      _id: req.body._id,
+      name: req.body.name,
+      username: req.body.username,
+      email: req.body.email
+    });
+    console.log('xd')
+    res.status(200).json({ result: "user updated", updatedUser: findAndUpdate });
   });
 
   app.post("/edit-users", (req, res) => {

@@ -12,6 +12,13 @@ function httpRequest(method, url, data, callback) {
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
       .end(callback);
+  } else if (method == "PUT") {
+    superagent
+      .put(url)
+      .send(data)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .end(callback);
   } else if (method == "DELETE") {
     superagent
       .del(url)
@@ -44,6 +51,8 @@ function saveAccount() {
         const usersList = JSON.parse(res.xhr.response).users;
 
         fillData(usersList);
+        const createUserButton = document.getElementById("create-user-button");
+        createUserButton.classList.remove("d-none");
       }
     };
 
@@ -56,33 +65,82 @@ function saveAccount() {
   }
 })();
 
-function getRowId(id) {
+function editUser(user) {
+  if (user) {
+    console.log(user);
+    const row = document.getElementById(user._id);
+    const html = `<th id="index" scope="row">${user.index}</th>
+    <td id="_id">${user._id}</td>
+    <td><input id="name" type="text" class="form-control" placeholder="Insert new Name" value="${user.name}" ></td>
+    <td><input id="username" type="text" class="form-control" placeholder="Insert new Username" value="${user.username}" ></td>
+    <td><input id="email" type="text" class="form-control" placeholder="Insert new Email" value="${user.email}" ></td>
+    <td>
+    <ul class="list-inline m-0">
+    <li class="list-inline-item">
+    <button class="btn btn-success btn-sm rounded-0" onclick="editUser();" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
+    <i class="bi bi-check-lg"></i>
+    </button>
+    </li>
+    <li class="list-inline-item">
+    <button class="btn btn-danger btn-sm rounded-0" type="button" title="Cancel">
+    <i class="bi bi-x-lg"></i>
+    </button
+    ></li>
+    </ul>
+    </td>`;
+    row.innerHTML = html;
+  } else {
+    const callback = (err, res) => {
+      if(err){
+        console.log(err);
+      } else {
+        console.log('salio bien ')
+        const editedUser = [{
+          
+        }]
+        // console.log(res);
+      }
+    }
+    const data = {
+      _id: document.getElementById('_id').innerHTML,
+      name: document.getElementById('name').value,
+      username: document.getElementById('username').value,
+      email: document.getElementById('email').value
+    }
+    
+    
+    httpRequest("PUT", "/edit-user", data, callback);
+  }
+}
+
+
+function deleteUser(id) {
   // console.log(event.target);
   if (id) {
     const createUserModal = document.getElementById("deleteModal");
     createUserModal.setAttribute("row-id", id);
   } else {
+    const modal = document.getElementById("deleteModal");
+    const rowId = modal.getAttribute("row-id");
+
     const callback = (err, res) => {
       if (err) {
         console.log(err);
       } else {
-        const modal = document.getElementById("deleteModal");
-        rowId = modal.getAttribute("row-id");
         const row = document.getElementById(rowId);
         row.remove();
-  
+
         const bsModal = bootstrap.Modal.getInstance(modal);
         bsModal.hide();
       }
     };
-  
-    const data = {
-      _id: id
-    };
-  
-    httpRequest("DELETE", "/users/id", data, callback);
-  }
 
+    const data = {
+      _id: rowId
+    };
+
+    httpRequest("DELETE", "/users/:_id", data, callback);
+  }
 }
 
 function fillData(users) {
@@ -91,19 +149,23 @@ function fillData(users) {
     //creacion
     //row
     const tableRow = document.createElement("tr");
+    tableRow.id = user._id;
+    // tableRow.className = "d-flex flex-row";
 
     //conteo de usuarios
     const tableHeaderIndex = document.createElement("th");
     tableHeaderIndex.scope = "row";
-
-    tableHeaderIndex.innerHTML = index + 1;
+    if (Array.isArray(users) && users.length != 1) {
+      tableHeaderIndex.innerHTML = index + 1;
+    } else {
+      tableHeaderIndex.innerHTML = tableBody.childElementCount + 1;
+    }
 
     //id
     const tableHeaderId = document.createElement("td");
     tableHeaderId.innerHTML = user._id;
 
     //row index
-    tableRow.id = tableHeaderId.innerHTML;
     //name
     const tableDataName = document.createElement("td");
     tableDataName.innerHTML = user.name;
@@ -115,6 +177,14 @@ function fillData(users) {
     //email
     const tableDataEmail = document.createElement("td");
     tableDataEmail.innerHTML = user.email;
+
+    const userInfo = {
+      index: tableHeaderIndex.innerHTML,
+      _id: user._id,
+      name: user.name,
+      username: user.username,
+      email: user.email
+    };
 
     //buttons
     const tableDataButtons = document.createElement("td");
@@ -130,6 +200,7 @@ function fillData(users) {
     buttonEdit.type = "button";
     buttonEdit.setAttribute("data-toggle", "tooltip");
     buttonEdit.setAttribute("data-placement", "top");
+    buttonEdit.addEventListener("click", () => editUser(userInfo));
     buttonEdit.title = "Edit";
 
     const iconEdit = document.createElement("i");
@@ -144,7 +215,7 @@ function fillData(users) {
     buttonDelete.setAttribute("data-bs-toggle", "modal");
     buttonDelete.setAttribute("data-bs-target", "#deleteModal");
     buttonDelete.addEventListener("click", () =>
-      getRowId(tableHeaderId.innerHTML)
+      deleteUser(tableHeaderId.innerHTML)
     );
     buttonDelete.title = "Delete";
 
@@ -193,18 +264,6 @@ function fillData(users) {
       tableRow.insertAdjacentElement("beforeend", cur);
     });
   });
-}
-
-//users buttons
-function editUser() {
-  event.preventDefault();
-
-  const callback = (err, res) => {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      console.log("status", res.statusCode);
-    }
-  };
-  // httpRequest('POST', '/edit-user', )
 }
 
 //confirma que el mensaje se envio correctamente
