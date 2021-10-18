@@ -67,52 +67,156 @@ function saveAccount() {
 
 function editUser(user) {
   if (user) {
-    console.log(user);
     const row = document.getElementById(user._id);
-    const html = `<th id="index" scope="row">${user.index}</th>
-    <td id="_id">${user._id}</td>
-    <td><input id="name" type="text" class="form-control" placeholder="Insert new Name" value="${user.name}" ></td>
-    <td><input id="username" type="text" class="form-control" placeholder="Insert new Username" value="${user.username}" ></td>
-    <td><input id="email" type="text" class="form-control" placeholder="Insert new Email" value="${user.email}" ></td>
-    <td>
+    const html = `
+    <form action="/edit-user">
+  <th id="index" scope="row">${user.index}</th>
+  <td id="_id-input">${user._id}</td>
+  <td>
+    <input
+      id="name-input"
+      type="text"
+      class="form-control"
+      placeholder="Insert new Name"
+      value="${user.name}"
+      required
+    />
+  </td>
+  <td>
+    <input
+      id="username-input"
+      type="text"
+      class="form-control"
+      placeholder="Insert new Username"
+      value="${user.username}"
+      required
+    />
+  </td>
+  <td>
+    <input
+      id="email-input"
+      type="email"
+      class="form-control"
+      placeholder="Insert new Email"
+      value="${user.email}"
+      required
+    />
+  </td>
+  <td>
     <ul class="list-inline m-0">
-    <li class="list-inline-item">
-    <button class="btn btn-success btn-sm rounded-0" onclick="editUser();" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
-    <i class="bi bi-check-lg"></i>
-    </button>
-    </li>
-    <li class="list-inline-item">
-    <button class="btn btn-danger btn-sm rounded-0" type="button" title="Cancel">
-    <i class="bi bi-x-lg"></i>
-    </button
-    ></li>
+      <li class="list-inline-item">
+        <button
+          class="btn btn-success btn-sm rounded-0"
+          type="submit"
+          onclick="editUser();"
+          title="Edit"
+        >
+          <i class="bi bi-check-lg"></i>
+        </button>
+      </li>
+      <li class="list-inline-item">
+        <button
+          class="btn btn-danger btn-sm rounded-0"
+          type="button"
+          title="Cancel"
+          onclick="cancelEdit()"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </li>
     </ul>
-    </td>`;
+  </td>
+</form>`;
     row.innerHTML = html;
   } else {
     const callback = (err, res) => {
-      if(err){
+      if (err) {
         console.log(err);
       } else {
-        console.log('salio bien ')
-        const editedUser = [{
-          
-        }]
-        // console.log(res);
+        const { index, _id, name, username, email } = JSON.parse(res.text);
+
+        const editedRow = convertRow(index, _id, name, username, email);
+
+        const row = document.getElementById(_id);
+        row.innerHTML = editedRow;
       }
-    }
+    };
     const data = {
-      _id: document.getElementById('_id').innerHTML,
-      name: document.getElementById('name').value,
-      username: document.getElementById('username').value,
-      email: document.getElementById('email').value
-    }
-    
-    
+      index: document.getElementById("index").innerHTML,
+      _id: document.getElementById("_id-input").innerHTML,
+      name: document.getElementById("name-input").value,
+      username: document.getElementById("username-input").value,
+      email: document.getElementById("email-input").value
+    };
+
     httpRequest("PUT", "/edit-user", data, callback);
   }
 }
 
+function cancelEdit() {
+  const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
+
+  const callback = (err, res) => {
+    if (err) {
+      console.log("status", res.xhr.status);
+    } else {
+      console.log("status", res.xhr.status);
+      const usersList = JSON.parse(res.xhr.response).users;
+
+      document.getElementById("tableBody").innerHTML = fillData(usersList);
+      const createUserButton = document.getElementById("create-user-button");
+      createUserButton.classList.remove("d-none");
+    }
+  };
+
+  superagent
+    .get("/get-users")
+    .set("Content-Type", "application/json")
+    .set("Accept", "application/json")
+    .set("Authorization", "Bearer " + accessToken)
+    .end(callback);
+
+  httpRequest("GET", "/get-users", data, callback);
+}
+
+function convertRow(index, id, name, username, email) {
+  return `
+<tr id="${id}">
+  <th id='index' scope="row">${index}</th>
+  <td>${id}</td>
+  <td>${name}</td>
+  <td>${username}</td>
+  <td>${email}</td>
+  <td>
+    <ul class="list-inline m-0">
+      <li class="list-inline-item">
+        <button
+          class="btn btn-success btn-sm rounded-0"
+          type="button"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Edit"
+          onclick="() => editUser(userInfo)"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+      </li>
+      <li class="list-inline-item">
+        <button
+          class="btn btn-danger btn-sm rounded-0"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#deleteModal"
+          title="Delete"
+          onclick="cancelEdit()"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+      </li>
+    </ul>
+  </td>
+</tr>`;
+}
 
 function deleteUser(id) {
   // console.log(event.target);
@@ -155,7 +259,7 @@ function fillData(users) {
     //conteo de usuarios
     const tableHeaderIndex = document.createElement("th");
     tableHeaderIndex.scope = "row";
-    if (Array.isArray(users) && users.length != 1) {
+    if (users.length != 1) {
       tableHeaderIndex.innerHTML = index + 1;
     } else {
       tableHeaderIndex.innerHTML = tableBody.childElementCount + 1;
@@ -186,29 +290,30 @@ function fillData(users) {
       email: user.email
     };
 
+    
     //buttons
     const tableDataButtons = document.createElement("td");
-
+    
     const unorderedListButtons = document.createElement("ul");
     unorderedListButtons.className = "list-inline m-0";
-
+    
     const listItemEdit = document.createElement("li");
     listItemEdit.className = "list-inline-item";
-
+    
     const buttonEdit = document.createElement("button");
     buttonEdit.className = "btn btn-success btn-sm rounded-0";
     buttonEdit.type = "button";
     buttonEdit.setAttribute("data-toggle", "tooltip");
     buttonEdit.setAttribute("data-placement", "top");
-    buttonEdit.addEventListener("click", () => editUser(userInfo));
     buttonEdit.title = "Edit";
-
+    buttonEdit.onclick = () => editUser(userInfo);
+    
     const iconEdit = document.createElement("i");
     iconEdit.className = "bi bi-pencil";
-
+    
     const listItemDelete = document.createElement("li");
     listItemDelete.className = "list-inline-item";
-
+    
     const buttonDelete = document.createElement("button");
     buttonDelete.className = "btn btn-danger btn-sm rounded-0";
     buttonDelete.type = "button";
@@ -410,7 +515,7 @@ function sendLoginData() {
 
   const invalidUser = document.getElementById("invalid-user");
 
-  invalidUser.style.display = "d-none";
+  invalidUser.classList.add = "d-none";
 
   const data = JSON.stringify({
     username: document.getElementById("username").value,

@@ -1,106 +1,82 @@
-<form method="POST">
-    <div class="input-group mb-3">
-      <span class="input-group-text bg-primary"
-        ><i class="bi bi-person-plus-fill text-white"></i
-      ></span>
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Name"
-        id="name"
-      />
-    </div>
-    <div class="input-group mb-3">
-      <span class="input-group-text bg-primary"
-        ><i class="bi bi-person-plus-fill text-white"></i
-      ></span>
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Username"
-        id="username"
-      />
-    </div>
-    <div
-      class="alert alert-danger d-none"
-      role="alert"
-      id="username-taken"
-    >
-      Username already in use
-    </div>
-    <div class="input-group mb-3">
-      <span class="input-group-text bg-primary"
-        ><i class="bi bi-envelope text-white"></i
-      ></span>
-      <input
-        type="email"
-        class="form-control"
-        placeholder="Email"
-        id="email"
-      />
-    </div>
-    <div
-      class="alert alert-danger d-none"
-      role="alert"
-      id="email-taken"
-    >
-      Email already in use
-    </div>
-    <div class="input-group mb-3">
-      <span class="input-group-text bg-primary"
-        ><i class="bi bi-key-fill text-white"></i
-      ></span>
-      <input
-        type="password"
-        class="form-control"
-        placeholder="Password"
-        id="password"
-      />
-      <div
-        class="input-group-addon border d-flex align-items-center"
-        tabindex="-1"
-      >
-        <a tabindex="-1" href onclick="showPassword()"
-          ><i
-            class="fa fa-eye-slash p-2"
-            aria-hidden="true"
-            id="eye1"
-          ></i
-        ></a>
-      </div>
-    </div>
-    <div class="input-group mb-3">
-      <span class="input-group-text bg-primary"
-        ><i class="bi bi-key-fill text-white"></i
-      ></span>
-      <input
-        type="password"
-        class="form-control"
-        placeholder="Repeat password"
-        id="repeat-password"
-      />
-      <div class="input-group-addon border d-flex align-items-center">
-        <a tabindex="-1" href onclick="showPassword()"
-          ><i
-            class="fa fa-eye-slash p-2"
-            aria-hidden="true"
-            id="eye2"
-          ></i
-        ></a>
-      </div>
-    </div>
-    <div
-      class="alert alert-danger d-none"
-      role="alert"
-      id="password-error"
-    >
-      Passwords do not match
-    </div>
-    <div
-      class="alert alert-danger d-none"
-      role="alert"
-      id="invalid-password"
-    >
-      Password must be at least 8 characters long
-    </div>
-  </form>
+<div class="input-group mb-3">
+  <span class="input-group-text bg-primary"
+    ><i class="bi bi-person-plus-fill text-white"></i
+  ></span>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Name"
+    id="name"
+    required
+  />
+</div>
+<div class="input-group mb-3">
+  <span class="input-group-text bg-primary"
+    ><i class="bi bi-person-plus-fill text-white"></i
+  ></span>
+  <input
+    class="form-control"
+    type="text"
+    placeholder="Username"
+    id="username"
+    required
+  />
+</div>
+<div class="alert alert-danger d-none" role="alert" id="username-taken">
+  Username already in use
+</div>
+<div class="input-group mb-3">
+  <span class="input-group-text bg-primary"
+    ><i class="bi bi-envelope text-white"></i
+  ></span>
+  <input
+    type="email"
+    class="form-control"
+    placeholder="Email"
+    id="email"
+    required
+  />
+</div>
+<div class="alert alert-danger d-none" role="alert" id="email-taken">
+  Email already in use
+</div>
+<div class="input-group mb-3">
+  <span class="input-group-text bg-primary"
+    ><i class="bi bi-key-fill text-white"></i
+  ></span>
+  <input
+    type="password"
+    class="form-control"
+    placeholder="Password"
+    id="password"
+    required
+  />
+  <div class="input-group-addon border d-flex align-items-center" tabindex="-1">
+    <a tabindex="-1" href onclick="showPassword()"
+      ><i class="fa fa-eye-slash p-2" aria-hidden="true" id="eye1"></i
+    ></a>
+  </div>
+</div>
+<div class="input-group mb-3">
+  <span class="input-group-text bg-primary"
+    ><i class="bi bi-key-fill text-white"></i
+  ></span>
+  <input
+    type="password"
+    class="form-control"
+    placeholder="Repeat password"
+    id="repeat-password"
+    required
+  />
+  <div class="input-group-addon border d-flex align-items-center">
+    <a tabindex="-1" href onclick="showPassword()"
+      ><i class="fa fa-eye-slash p-2" aria-hidden="true" id="eye2"></i
+    ></a>
+  </div>
+</div>
+<div class="alert alert-danger d-none" role="alert" id="password-error">
+  Passwords do not match
+</div>
+<div class="alert alert-danger d-none" role="alert" id="invalid-password">
+  Password must be at least 8 characters long
+</div>

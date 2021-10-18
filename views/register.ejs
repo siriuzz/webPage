@@ -1,140 +1,131 @@
-<body>
-  <div class="container-fluid">
-    <div class="" style="margin-top: 100px; margin-bottom: 100px">
-      <div class="rounded d-flex justify-content-center">
-        <div class="col-md-5 col-sm-12 shadow-lg p-5 bg-light">
-          <div class="text-center">
-            <h3 class="text-primary" id="register-title">Create Account</h3>
-          </div>
-          <div class="p-4">
-            <form method="POST" action="/register" >
-              <div class="input-group mb-3">
-                <span class="input-group-text bg-primary"
-                  ><i class="bi bi-person-plus-fill text-white"></i
-                ></span>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Name"
-                  id="name"
-                  required
-                />
-              </div>
-              <div class="input-group mb-3">
-                <span class="input-group-text bg-primary"
-                  ><i class="bi bi-person-plus-fill text-white"></i
-                ></span>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Username"
-                  id="username"
-                  required
-                />
-              </div>
+<div class="container-fluid">
+  <div class="" style="margin-top: 100px; margin-bottom: 100px">
+    <div class="rounded d-flex justify-content-center">
+      <div class="col-md-5 col-sm-12 shadow-lg p-5 bg-light">
+        <div class="text-center">
+          <h3 class="text-primary" id="register-title">Create Account</h3>
+        </div>
+        <div class="p-4">
+          <form method="POST" action="/register" onsubmit="sendRegisterData()">
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-primary"
+                ><i class="bi bi-person-plus-fill text-white"></i
+              ></span>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Name"
+                id="name"
+                required
+              />
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-primary"
+                ><i class="bi bi-person-plus-fill text-white"></i
+              ></span>
+              <input
+                class="form-control"
+                type="text"
+                placeholder="Username"
+                id="username"
+                required
+              />
+            </div>
+            <div
+              class="alert alert-danger d-none"
+              role="alert"
+              id="username-taken"
+            >
+              Username already in use
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-primary"
+                ><i class="bi bi-envelope text-white"></i
+              ></span>
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Email"
+                id="email"
+                required
+              />
+            </div>
+            <div
+              class="alert alert-danger d-none"
+              role="alert"
+              id="email-taken"
+            >
+              Email already in use
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-primary"
+                ><i class="bi bi-key-fill text-white"></i
+              ></span>
+              <input
+                type="password"
+                class="form-control"
+                placeholder="Password"
+                id="password"
+                required
+              />
               <div
-                class="alert alert-danger d-none"
-                role="alert"
-                id="username-taken"
+                class="input-group-addon border d-flex align-items-center"
+                tabindex="-1"
               >
-                Username already in use
+                <a tabindex="-1" href onclick="showPassword()"
+                  ><i
+                    class="fa fa-eye-slash p-2"
+                    aria-hidden="true"
+                    id="eye1"
+                  ></i
+                ></a>
               </div>
-              <div class="input-group mb-3">
-                <span class="input-group-text bg-primary"
-                  ><i class="bi bi-envelope text-white"></i
-                ></span>
-                <input
-                  type="email"
-                  class="form-control"
-                  placeholder="Email"
-                  id="email"
-                  required
-                />
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-primary"
+                ><i class="bi bi-key-fill text-white"></i
+              ></span>
+              <input
+                type="password"
+                class="form-control"
+                placeholder="Repeat password"
+                id="repeat-password"
+                required
+              />
+              <div class="input-group-addon border d-flex align-items-center">
+                <a tabindex="-1" href onclick="showPassword()"
+                  ><i
+                    class="fa fa-eye-slash p-2"
+                    aria-hidden="true"
+                    id="eye2"
+                  ></i
+                ></a>
               </div>
-              <div
-                class="alert alert-danger d-none"
-                role="alert"
-                id="email-taken"
-              >
-                Email already in use
-              </div>
-              <div class="input-group mb-3">
-                <span class="input-group-text bg-primary"
-                  ><i class="bi bi-key-fill text-white"></i
-                ></span>
-                <input
-                  type="password"
-                  class="form-control"
-                  placeholder="Password"
-                  id="password"
-                  required
-                />
-                <div
-                  class="input-group-addon border d-flex align-items-center"
-                  tabindex="-1"
-                >
-                  <a tabindex="-1" href onclick="showPassword()"
-                    ><i
-                      class="fa fa-eye-slash p-2"
-                      aria-hidden="true"
-                      id="eye1"
-                    ></i
-                  ></a>
-                </div>
-              </div>
-              <div class="input-group mb-3">
-                <span class="input-group-text bg-primary"
-                  ><i class="bi bi-key-fill text-white"></i
-                ></span>
-                <input
-                  type="password"
-                  class="form-control"
-                  placeholder="Repeat password"
-                  id="repeat-password"
-                  required
-                />
-                <div class="input-group-addon border d-flex align-items-center">
-                  <a tabindex="-1" href onclick="showPassword()"
-                    ><i
-                      class="fa fa-eye-slash p-2"
-                      aria-hidden="true"
-                      id="eye2"
-                    ></i
-                  ></a>
-                </div>
-              </div>
-              <div
-                class="alert alert-danger d-none"
-                role="alert"
-                id="password-error"
-              >
-                Passwords do not match
-              </div>
-              <div
-                class="alert alert-danger d-none"
-                role="alert"
-                id="invalid-password"
-              >
-                Password must be at least 8 characters long
-              </div>
-              <div class="d-grid col-12 mx-auto">
-                <button
-                  class="btn btn-primary"
-                  type="submit"
-                  onclick="sendRegisterData()"
-
-                >
-                  Sign up
-                </button>
-              </div>
-              <p class="text-center mt-3">
-                Already have an account?
-                <span class="text-primary"><a href="/login">Log in</a></span>
-              </p>
-            </form>
-          </div>
+            </div>
+            <div
+              class="alert alert-danger d-none"
+              role="alert"
+              id="password-error"
+            >
+              Passwords do not match
+            </div>
+            <div
+              class="alert alert-danger d-none"
+              role="alert"
+              id="invalid-password"
+            >
+              Password must be at least 8 characters long
+            </div>
+            <div class="d-grid col-12 mx-auto">
+              <button class="btn btn-primary" type="submit">Sign up</button>
+            </div>
+            <p class="text-center mt-3">
+              Already have an account?
+              <span class="text-primary"><a href="/login">Log in</a></span>
+            </p>
+          </form>
         </div>
       </div>
     </div>
   </div>
-</body>
+</div>

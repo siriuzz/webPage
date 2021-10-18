@@ -24,15 +24,23 @@ module.exports = (app) => {
   });
 
   app.put("/edit-user", async (req, res) => {
-    console.log(req.body)
+    const { index, _id, name, username, email } = req.body;
     const findAndUpdate = await User.findByIdAndUpdate(req.body._id, {
-      _id: req.body._id,
-      name: req.body.name,
-      username: req.body.username,
-      email: req.body.email
+      _id,
+      name,
+      username,
+      email
     });
-    console.log('xd')
-    res.status(200).json({ result: "user updated", updatedUser: findAndUpdate });
+
+    const editedUserInfo = {
+      index,
+      _id,
+      name,
+      username,
+      email
+    };
+    console.log(findAndUpdate);
+    res.status(200).json(editedUserInfo);
   });
 
   app.post("/edit-users", (req, res) => {
@@ -111,7 +119,7 @@ const checkToken = (req, res, next) => {
           //   authData
           // });
           // console.log(authData);
-          // console.log("SUCCESS: Connected to protected route");
+          console.log("SUCCESS: Connected to protected route");
 
           next();
         }
