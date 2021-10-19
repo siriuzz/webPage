@@ -65,119 +65,85 @@ function saveAccount() {
   }
 })();
 
-function editUser(user) {
-  if (user) {
-    const row = document.getElementById(user._id);
-    const html = `
-    <form action="/edit-user">
-  <th id="index" scope="row">${user.index}</th>
-  <td id="_id-input">${user._id}</td>
-  <td>
-    <input
-      id="name-input"
-      type="text"
-      class="form-control"
-      placeholder="Insert new Name"
-      value="${user.name}"
-      required
-    />
-  </td>
-  <td>
-    <input
-      id="username-input"
-      type="text"
-      class="form-control"
-      placeholder="Insert new Username"
-      value="${user.username}"
-      required
-    />
-  </td>
-  <td>
-    <input
-      id="email-input"
-      type="email"
-      class="form-control"
-      placeholder="Insert new Email"
-      value="${user.email}"
-      required
-    />
-  </td>
-  <td>
-    <ul class="list-inline m-0">
-      <li class="list-inline-item">
-        <button
-          class="btn btn-success btn-sm rounded-0"
-          type="submit"
-          onclick="editUser();"
-          title="Edit"
-        >
-          <i class="bi bi-check-lg"></i>
-        </button>
-      </li>
-      <li class="list-inline-item">
-        <button
-          class="btn btn-danger btn-sm rounded-0"
-          type="button"
-          title="Cancel"
-          onclick="cancelEdit()"
-        >
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </li>
-    </ul>
-  </td>
-</form>`;
-    row.innerHTML = html;
+function editUser(id) {
+  event.preventDefault();
+  if (id) {
+    const modal = document.getElementById("editModal");
+    modal.setAttribute("row-id", id);
+    const curRow = document.getElementById(id).childNodes;
+    document.getElementById("edit-name").value = curRow[2].innerHTML;
+    document.getElementById("edit-username").value = curRow[3].innerHTML;
+    document.getElementById("edit-email").value = curRow[4].innerHTML;
   } else {
+    const modal = document.getElementById("editModal");
+    const _id = modal.getAttribute("row-id");
+    const {
+      [0]: index,
+      [2]: name,
+      [3]: username,
+      [4]: email
+    } = document.getElementById(_id).childNodes;
     const callback = (err, res) => {
       if (err) {
-        console.log(err);
+        console.log(res.text)
+        const error = JSON.parse(res.text);
       } else {
-        const { index, _id, name, username, email } = JSON.parse(res.text);
-
-        const editedRow = convertRow(index, _id, name, username, email);
-
-        const row = document.getElementById(_id);
-        row.innerHTML = editedRow;
+        const editModal = bootstrap.Modal.getInstance(
+          document.getElementById("editModal")
+        );
+        editModal.hide();
+        const {
+          index: newIndex,
+          _id: newId,
+          name: newName,
+          username: newUsername,
+          email: newEmail
+        } = JSON.parse(res.text);
+        index.innerHTML = newIndex;
+        document.getElementById(_id).childNodes[1].innerHTML = newId;
+        name.innerHTML = newName;
+        username.innerHTML = newUsername;
+        email.innerHTML = newEmail;
       }
     };
+
     const data = {
-      index: document.getElementById("index").innerHTML,
-      _id: document.getElementById("_id-input").innerHTML,
-      name: document.getElementById("name-input").value,
-      username: document.getElementById("username-input").value,
-      email: document.getElementById("email-input").value
+      index: index.innerHTML,
+      _id: _id,
+      name: document.getElementById("edit-name").value,
+      username: document.getElementById("edit-username").value,
+      email: document.getElementById("edit-email").value
     };
 
     httpRequest("PUT", "/edit-user", data, callback);
   }
 }
 
-function cancelEdit() {
-  const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
+// function cancelEdit() {
+//   const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
 
-  const callback = (err, res) => {
-    if (err) {
-      console.log("status", res.xhr.status);
-    } else {
-      console.log("status", res.xhr.status);
-      const usersList = JSON.parse(res.xhr.response).users;
+//   const callback = (err, res) => {
+//     if (err) {
+//       console.log("status", res.xhr.status);
+//     } else {
+//       console.log("status", res.xhr.status);
+//       const usersList = JSON.parse(res.xhr.response).users;
 
-      document.getElementById("tableBody").innerHTML = fillData(usersList);
-      const createUserButton = document.getElementById("create-user-button");
-      createUserButton.classList.remove("d-none");
-    }
-  };
+//       document.getElementById("tableBody").innerHTML = fillData(usersList);
+//       const createUserButton = document.getElementById("create-user-button");
+//       createUserButton.classList.remove("d-none");
+//     }
+//   };
 
-  superagent
-    .get("/get-users")
-    .set("Content-Type", "application/json")
-    .set("Accept", "application/json")
-    .set("Authorization", "Bearer " + accessToken)
-    .end(callback);
+//   superagent
+//     .get("/get-users")
+//     .set("Content-Type", "application/json")
+//     .set("Accept", "application/json")
+//     .set("Authorization", "Bearer " + accessToken)
+//     .end(callback);
 
-  httpRequest("GET", "/get-users", data, callback);
-}
+//   httpRequest("GET", "/get-users", data, callback);
+// }
 
 function convertRow(index, id, name, username, email) {
   return `
@@ -282,38 +248,29 @@ function fillData(users) {
     const tableDataEmail = document.createElement("td");
     tableDataEmail.innerHTML = user.email;
 
-    const userInfo = {
-      index: tableHeaderIndex.innerHTML,
-      _id: user._id,
-      name: user.name,
-      username: user.username,
-      email: user.email
-    };
-
-    
     //buttons
     const tableDataButtons = document.createElement("td");
-    
+
     const unorderedListButtons = document.createElement("ul");
     unorderedListButtons.className = "list-inline m-0";
-    
+
     const listItemEdit = document.createElement("li");
     listItemEdit.className = "list-inline-item";
-    
+
     const buttonEdit = document.createElement("button");
     buttonEdit.className = "btn btn-success btn-sm rounded-0";
     buttonEdit.type = "button";
-    buttonEdit.setAttribute("data-toggle", "tooltip");
-    buttonEdit.setAttribute("data-placement", "top");
+    buttonEdit.setAttribute("data-bs-toggle", "modal");
+    buttonEdit.setAttribute("data-bs-target", "#editModal");
     buttonEdit.title = "Edit";
-    buttonEdit.onclick = () => editUser(userInfo);
-    
+    buttonEdit.onclick = () => editUser(user._id);
+
     const iconEdit = document.createElement("i");
     iconEdit.className = "bi bi-pencil";
-    
+
     const listItemDelete = document.createElement("li");
     listItemDelete.className = "list-inline-item";
-    
+
     const buttonDelete = document.createElement("button");
     buttonDelete.className = "btn btn-danger btn-sm rounded-0";
     buttonDelete.type = "button";

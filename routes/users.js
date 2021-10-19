@@ -25,7 +25,39 @@ module.exports = (app) => {
 
   app.put("/edit-user", async (req, res) => {
     const { index, _id, name, username, email } = req.body;
-    const findAndUpdate = await User.findByIdAndUpdate(req.body._id, {
+
+    const userTaken = await User.findOne({ username: username, email: {$nin: email} });
+    const emailTaken = await User.findOne({ email: email , username: {$nin: username}});
+
+    if (userTaken && emailTaken) {
+      return res.status(401).json([
+        {
+          field: "edit-username",
+          text: "Username taken"
+        },
+        {
+          field: "edit-email",
+          text: "Email taken"
+        }
+      ]);
+    }
+    if (userTaken) {
+      return res.status(401).json([
+        {
+          field: "edit-username",
+          text: "Username taken"
+        }
+      ]);
+    }
+    if (emailTaken) {
+      return res.status(401).json([
+        {
+          field: "edit-email",
+          text: "Email taken"
+        }
+      ]);
+    }
+    const findAndUpdate = await User.findByIdAndUpdate(_id, {
       _id,
       name,
       username,
@@ -39,7 +71,6 @@ module.exports = (app) => {
       username,
       email
     };
-    console.log(findAndUpdate);
     res.status(200).json(editedUserInfo);
   });
 

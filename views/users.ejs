@@ -73,6 +73,44 @@
   </div>
 </div>
 
+<!-- EDIT USER MODAL -->
+<div
+  class="modal fade"
+  id="editModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="editModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Register</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form method="PUT" action="/edit-user" onsubmit="editUser()">
+        <div class="modal-body"><%- include("partials/edit-user.ejs") %></div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button class="btn btn-primary" type="submit">Edit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- HEADER  -->
 <header class="w-75 m-auto">
   <div class="d-flex justify-content-between">
