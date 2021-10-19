@@ -67,13 +67,21 @@ function saveAccount() {
 
 function editUser(id) {
   event.preventDefault();
+
+  const editUsername = document.getElementById("edit-username");
+  const editEmail = document.getElementById("edit-email");
+
+  editUsername.classList.remove("is-invalid");
+  editEmail.classList.remove("is-invalid");
   if (id) {
     const modal = document.getElementById("editModal");
     modal.setAttribute("row-id", id);
     const curRow = document.getElementById(id).childNodes;
-    document.getElementById("edit-name").value = curRow[2].innerHTML;
-    document.getElementById("edit-username").value = curRow[3].innerHTML;
-    document.getElementById("edit-email").value = curRow[4].innerHTML;
+    const editName = document.getElementById("edit-name");
+
+    editName.value = curRow[2].innerHTML;
+    editUsername.value = curRow[3].innerHTML;
+    editEmail.value = curRow[4].innerHTML;
   } else {
     const modal = document.getElementById("editModal");
     const _id = modal.getAttribute("row-id");
@@ -83,10 +91,15 @@ function editUser(id) {
       [3]: username,
       [4]: email
     } = document.getElementById(_id).childNodes;
+
     const callback = (err, res) => {
       if (err) {
-        console.log(res.text)
+        console.log(JSON.parse(res.text));
         const error = JSON.parse(res.text);
+        error.forEach((e) => {
+          const input = document.getElementById(e.field);
+          input.classList.add("is-invalid");
+        });
       } else {
         const editModal = bootstrap.Modal.getInstance(
           document.getElementById("editModal")

@@ -17,13 +17,14 @@
   <input
     class="form-control"
     type="text"
-    placeholder="Username"
+    placeholder="a;sdlkfjas;osaijfapofi"
     id="edit-username"
+    aria-describedby="username-taken"
     required
-  />
-</div>
-<div class="alert alert-danger d-none" role="alert" id="username-taken">
-  Username already in use
+    />
+    <div class="invalid-feedback" id="username-taken">
+    Username already in use
+    </div>
 </div>
 <div class="input-group mb-3">
   <span class="input-group-text bg-primary"
@@ -34,9 +35,10 @@
     class="form-control"
     placeholder="Email"
     id="edit-email"
+    aria-describedby="email-taken d-none"
     required
   />
-</div>
-<div class="alert alert-danger d-none" role="alert" id="email-taken">
-  Email already in use
+  <div class="invalid-feedback" id="email-taken">
+    Email already in use
+  </div>
 </div>

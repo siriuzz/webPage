@@ -26,37 +26,31 @@ module.exports = (app) => {
   app.put("/edit-user", async (req, res) => {
     const { index, _id, name, username, email } = req.body;
 
-    const userTaken = await User.findOne({ username: username, email: {$nin: email} });
-    const emailTaken = await User.findOne({ email: email , username: {$nin: username}});
+    const users = await User.find();
+    const myUser = users.find((user) => (user._id = _id));
+    const emails = users.map((user) => user.email);
+    const usernames = users.map((user) => user.username);
 
-    if (userTaken && emailTaken) {
-      return res.status(401).json([
-        {
-          field: "edit-username",
-          text: "Username taken"
-        },
+
+    console.log(emails.indexOf(myUser.email))
+    if (email != myUser.email && emails.indexOf(myUser.email) !== -1) {
+      return res.status(500).json([
         {
           field: "edit-email",
           text: "Email taken"
         }
       ]);
     }
-    if (userTaken) {
-      return res.status(401).json([
+
+    if (username != myUser.username && usernames.indexOf(myUser.username) !== -1) {
+      return res.status(500).json([
         {
           field: "edit-username",
           text: "Username taken"
         }
       ]);
     }
-    if (emailTaken) {
-      return res.status(401).json([
-        {
-          field: "edit-email",
-          text: "Email taken"
-        }
-      ]);
-    }
+
     const findAndUpdate = await User.findByIdAndUpdate(_id, {
       _id,
       name,
