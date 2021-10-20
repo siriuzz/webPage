@@ -13,6 +13,8 @@ module.exports = (app) => {
   app.post("/register", async (req, res) => {
     //send data mongoose
     const { name, username, email, password } = req.body;
+    if (!name || !username || !email)
+      return res.status(500).json({ result: "empty fields" });
 
     const userTaken = await User.findOne({ username: username });
     const emailTaken = await User.findOne({ email: email });
@@ -22,9 +24,10 @@ module.exports = (app) => {
         error: [
           {
             text: "Username already exists",
-            field: "username-taken"
+            field: "username",
+            alert: "username-error"
           },
-          { text: "Email already exists", field: "email-taken" }
+          { text: "Email already exists", field: "email", alert: "email-error" }
         ]
       });
     }
@@ -34,7 +37,8 @@ module.exports = (app) => {
         error: [
           {
             text: "Username already exists",
-            field: "username-taken"
+            field: "username",
+            alert: "username-error"
           }
         ]
       });
@@ -42,7 +46,9 @@ module.exports = (app) => {
 
     if (emailTaken) {
       return res.status(401).json({
-        error: [{ text: "Email already exists", field: "email-taken" }]
+        error: [
+          { text: "Email already exists", field: "email", alert: "email-error" }
+        ]
       });
     }
 

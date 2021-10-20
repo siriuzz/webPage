@@ -400,36 +400,88 @@ function showPassword() {
 function sendRegisterData() {
   event.preventDefault();
 
-  const password = document.getElementById("password").value;
-  const repeatPassword = document.getElementById("repeat-password").value;
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
+  const usernameInput = document.getElementById("username");
+  const password = document.getElementById("password");
+  const repeatPassword = document.getElementById("repeat-password");
 
-  //errores
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+
+  function validateEmail(email) {
+    if (emailRegex.test(email.value)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const emailVerification = validateEmail(emailInput);
+
+  console.log(emailVerification)
+
+  nameInput.className = "form-control";
+  emailInput.className = "form-control";
+  usernameInput.className = "form-control";
+  password.className = "form-control";
+  repeatPassword.className = "form-control";
+
+  const idArray = ["name", "username", "email", "password", "repeat-password"];
+  idArray.forEach((id) => {
+    const element = document.getElementById(id);
+    if (element.value == "") {
+      element.classList.add("is-invalid");
+      if (id == "username") {
+        document.getElementById("username-error").innerHTML =
+          "Please fill out this field";
+      } else if (id == "email") {
+        document.getElementById("email-error").innerHTML =
+          "Please fill out this field";
+      }
+    }
+  });
+
+  const passwordValue = password.value;
+  const repeatPasswordValue = repeatPassword.value;
+
+  // errores
   const passwordError = document.getElementById("password-error");
   const invalidPassword = document.getElementById("invalid-password");
-  const usernameTaken = document.getElementById("username-taken");
-  const emailTaken = document.getElementById("email-taken");
 
-  invalidPassword.classList.add("d-none");
-  passwordError.classList.add("d-none");
-  usernameTaken.classList.add("d-none");
-  emailTaken.classList.add("d-none");
+  passwordError.className = "d-none";
+  invalidPassword.className = "d-none";
 
-  if (password !== repeatPassword) {
-    passwordError.classList.remove("d-none");
+  if (passwordValue !== repeatPasswordValue) {
+    document.getElementById("password").classList.add("is-invalid");
+    document.getElementById("repeat-password").classList.add("is-invalid");
+    passwordError.className = "invalid-feedback";
   }
 
-  if (password.length < 8) {
-    invalidPassword.classList.remove("d-none");
+  if (passwordValue.length < 8 && passwordValue.length > 0) {
+    document.getElementById("password").classList.add("is-invalid");
+    document.getElementById("repeat-password").classList.add("is-invalid");
+    invalidPassword.className = "invalid-feedback";
   }
 
-  if (password == repeatPassword && password.length >= 8) {
+  if (
+    passwordValue == repeatPasswordValue &&
+    passwordValue.length >= 8 &&
+    nameInput != "" &&
+    usernameInput != "" &&
+    email != "" &&
+    emailVerification == true
+  ) {
     const callback = (err, res) => {
       if (err) {
-        console.log(res);
         const error = JSON.parse(res.xhr.response).error;
         error.forEach((e) => {
-          document.getElementById(e.field).classList.remove("d-none");
-          document.getElementById(e.field).innerHTML = e.text;
+          const input = document.getElementById(e.field);
+          const alert = document.getElementById(e.alert);
+
+          input.classList.add("is-invalid");
+          alert.className = "invalid-feedback";
+
+          alert.innerHTML = e.text;
         });
       } else {
         console.log("status", res.statusCode);
@@ -483,9 +535,9 @@ function sendRegisterData() {
 function sendLoginData() {
   event.preventDefault();
 
-  const invalidUser = document.getElementById("invalid-user");
+  const username = document.getElementById("username");
 
-  invalidUser.classList.add = "d-none";
+  username.classList.remove("is-invalid");
 
   const data = JSON.stringify({
     username: document.getElementById("username").value,
@@ -495,7 +547,7 @@ function sendLoginData() {
   const callback = (err, res) => {
     // Calling the end function will send the request
     if (err) {
-      invalidUser.classList.remove("d-none");
+      username.classList.add("is-invalid");
     } else {
       saveAccount();
 

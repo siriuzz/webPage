@@ -7,8 +7,12 @@
     class="form-control"
     placeholder="Name"
     id="name"
+    aria-describedby="empty-field-name"
     required
   />
+  <div class="invalid-feedback" id="empty-field-name">
+    Please fill out this field.
+  </div>
 </div>
 <div class="input-group mb-3">
   <span class="input-group-text bg-primary"
@@ -19,12 +23,12 @@
     type="text"
     placeholder="Username"
     id="username"
+    aria-describedby="username-error"
     required
   />
+  <div class="invalid-feedback" id="username-error"></div>
 </div>
-<div class="alert alert-danger d-none" role="alert" id="username-taken">
-  Username already in use
-</div>
+
 <div class="input-group mb-3">
   <span class="input-group-text bg-primary"
     ><i class="bi bi-envelope text-white"></i
@@ -34,11 +38,10 @@
     class="form-control"
     placeholder="Email"
     id="email"
+    aria-describedby="email-error"
     required
   />
-</div>
-<div class="alert alert-danger d-none" role="alert" id="email-taken">
-  Email already in use
+  <div class="invalid-feedback" id="email-error"></div>
 </div>
 <div class="input-group mb-3">
   <span class="input-group-text bg-primary"
@@ -49,12 +52,16 @@
     class="form-control"
     placeholder="Password"
     id="password"
+    aria-describedby="empty-field-password"
     required
   />
   <div class="input-group-addon border d-flex align-items-center" tabindex="-1">
     <a tabindex="-1" href onclick="showPassword()"
       ><i class="fa fa-eye-slash p-2" aria-hidden="true" id="eye1"></i
     ></a>
+  </div>
+  <div class="invalid-feedback" id="empty-field-password">
+    Please fill out this field.
   </div>
 </div>
 <div class="input-group mb-3">
@@ -73,10 +80,10 @@
       ><i class="fa fa-eye-slash p-2" aria-hidden="true" id="eye2"></i
     ></a>
   </div>
-</div>
-<div class="alert alert-danger d-none" role="alert" id="password-error">
-  Passwords do not match
-</div>
-<div class="alert alert-danger d-none" role="alert" id="invalid-password">
-  Password must be at least 8 characters long
+  <div class="d-none" role="alert" id="invalid-password">
+    Password must be at least 8 characters long.
+  </div>
+  <div class="d-none" role="alert" id="password-error">
+    Passwords do not match.
+  </div>
 </div>

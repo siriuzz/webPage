@@ -26,37 +26,9 @@ module.exports = (app) => {
   app.put("/edit-user", async (req, res) => {
     const { index, _id, name, username, email } = req.body;
 
-    const users = await User.find();
-    const myUser = users.find((user) => (user._id = _id));
-    const emails = users.map((user) => user.email);
-    const usernames = users.map((user) => user.username);
-
-
-    console.log(emails.indexOf(myUser.email))
-    if (email != myUser.email && emails.indexOf(myUser.email) !== -1) {
-      return res.status(500).json([
-        {
-          field: "edit-email",
-          text: "Email taken"
-        }
-      ]);
-    }
-
-    if (username != myUser.username && usernames.indexOf(myUser.username) !== -1) {
-      return res.status(500).json([
-        {
-          field: "edit-username",
-          text: "Username taken"
-        }
-      ]);
-    }
-
-    const findAndUpdate = await User.findByIdAndUpdate(_id, {
-      _id,
-      name,
-      username,
-      email
-    });
+    const myUser = await User.findOne({ _id: _id });
+    const findUsername = await User.findOne({ username: username });
+    const findEmail = await User.findOne({ email: email });
 
     const editedUserInfo = {
       index,
@@ -65,6 +37,49 @@ module.exports = (app) => {
       username,
       email
     };
+
+    if (myUser.username !== username && myUser.email !== email) {
+      if (findUsername && findEmail) {
+        return res.status(500).json([
+          {
+            field: "edit-username",
+            text: "Username taken"
+          },
+          {
+            field: "edit-email",
+            text: "Email already taken"
+          }
+        ]);
+      }
+    }
+
+    if (myUser.username !== username) {
+      if (findUsername) {
+        return res.status(500).json([
+          {
+            field: "edit-username",
+            text: "Username taken"
+          }
+        ]);
+      }
+    }
+
+    if (myUser.email !== email) {
+      if (findEmail) {
+        return res.status(500).json([
+          {
+            field: "edit-email",
+            text: "Email already taken"
+          }
+        ]);
+      }
+    }
+
+    User.findByIdAndUpdate(_id, {
+      username,
+      email
+    })
+
     res.status(200).json(editedUserInfo);
   });
 
