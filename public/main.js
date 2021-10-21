@@ -1,9 +1,11 @@
 function httpRequest(method, url, data, callback) {
+  const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
   if (method == "GET") {
     superagent
       .get(url)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
       .end(callback);
   } else if (method == "POST") {
     superagent
@@ -11,6 +13,7 @@ function httpRequest(method, url, data, callback) {
       .send(data)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
       .end(callback);
   } else if (method == "PUT") {
     superagent
@@ -18,6 +21,7 @@ function httpRequest(method, url, data, callback) {
       .send(data)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
       .end(callback);
   } else if (method == "DELETE") {
     superagent
@@ -25,9 +29,21 @@ function httpRequest(method, url, data, callback) {
       .send(data)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
       .end(callback);
   }
 }
+
+(function getUser(){
+  const callback = (err, res) => {
+    if(err){
+      console.log(err)
+    } else {
+      console.log(res)
+    }
+  }
+  httpRequest('GET', '/users', callback, callback)
+})();
 
 function saveAccount() {
   localStorage.setItem(
@@ -414,11 +430,9 @@ function sendRegisterData() {
     } else {
       return false;
     }
-  };
+  }
 
   const emailVerification = validateEmail(emailInput);
-
-  console.log(emailVerification)
 
   nameInput.className = "form-control";
   emailInput.className = "form-control";
@@ -536,8 +550,10 @@ function sendLoginData() {
   event.preventDefault();
 
   const username = document.getElementById("username");
+  const password = document.getElementById("password");
 
   username.classList.remove("is-invalid");
+  password.classList.remove("is-invalid");
 
   const data = JSON.stringify({
     username: document.getElementById("username").value,
@@ -548,6 +564,7 @@ function sendLoginData() {
     // Calling the end function will send the request
     if (err) {
       username.classList.add("is-invalid");
+      password.classList.add("is-invalid");
     } else {
       saveAccount();
 

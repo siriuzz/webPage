@@ -4,6 +4,8 @@ const User = require("../models/userModel");
 module.exports = (app) => {
   //renderiza la pagina de users al ir a esa direccion
   app.get("/users", async (req, res) => {
+    console.log(req.headers);
+
     res.render("users.ejs", { title: "Users" });
   });
 

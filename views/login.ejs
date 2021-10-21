@@ -41,12 +41,6 @@
                     aria-describedby="invalid-user"
                     id="username"
                   />
-                  <div
-                    class="invalid-feedback"
-                    id="invalid-user"
-                  >
-                    Username or password incorrect
-                  </div>
                 </div>
                 <div class="input-group mb-3">
                   <span class="input-group-text bg-primary"
@@ -56,9 +50,14 @@
                     type="password"
                     class="form-control"
                     placeholder="Password"
+                    aria-describedby="invalid-user"
                     id="password"
                   />
+                  <div class="invalid-feedback" id="invalid-user">
+                    Username or password incorrect
+                  </div>
                 </div>
+
                 <button
                   class="btn btn-primary text-center mt-2"
                   type="submit"

@@ -22,7 +22,8 @@ module.exports = (app) => {
         _id: findUser._id,
         name: findUser.name,
         username: findUser.username,
-        email: findUser.email
+        email: findUser.email,
+        role: findUser.role
       }
       if (!findUser) {
         return res.status(401).json("wrong email or password");
