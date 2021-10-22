@@ -34,17 +34,6 @@ function httpRequest(method, url, data, callback) {
   }
 }
 
-(function getUser(){
-  const callback = (err, res) => {
-    if(err){
-      console.log(err)
-    } else {
-      console.log(res)
-    }
-  }
-  httpRequest('GET', '/users', callback, callback)
-})();
-
 function saveAccount() {
   localStorage.setItem(
     "account",
@@ -54,8 +43,24 @@ function saveAccount() {
   );
 }
 
+// (function sendToken() {
+//   const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
+//   superagent
+//     .get("/read-users")
+//     .set("Content-Type", "application/json")
+//     .set("Accept", "application/json")
+//     .set("Authorization", "Bearer " + accessToken)
+//     .end((err, res) => {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         console.log("token sent");
+//       }
+//     });
+// })();
+
 (function isLogged() {
-  if (window.location.pathname == "/users" && localStorage.getItem("token")) {
+  if (localStorage.getItem("token") && window.location.pathname == "/users") {
     // event.preventDefault();
     const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
 
@@ -84,16 +89,16 @@ function saveAccount() {
 function editUser(id) {
   event.preventDefault();
 
-  const editUsername = document.getElementById("edit-username");
-  const editEmail = document.getElementById("edit-email");
-
-  editUsername.classList.remove("is-invalid");
-  editEmail.classList.remove("is-invalid");
   if (id) {
     const modal = document.getElementById("editModal");
-    modal.setAttribute("row-id", id);
     const curRow = document.getElementById(id).childNodes;
     const editName = document.getElementById("edit-name");
+    const editUsername = document.getElementById("edit-username");
+    const editEmail = document.getElementById("edit-email");
+
+    modal.setAttribute("row-id", id);
+    editUsername.classList.remove("is-invalid");
+    editEmail.classList.remove("is-invalid");
 
     editName.value = curRow[2].innerHTML;
     editUsername.value = curRow[3].innerHTML;
@@ -110,7 +115,6 @@ function editUser(id) {
 
     const callback = (err, res) => {
       if (err) {
-        console.log(JSON.parse(res.text));
         const error = JSON.parse(res.text);
         error.forEach((e) => {
           const input = document.getElementById(e.field);
@@ -121,18 +125,15 @@ function editUser(id) {
           document.getElementById("editModal")
         );
         editModal.hide();
-        const {
-          index: newIndex,
-          _id: newId,
-          name: newName,
-          username: newUsername,
-          email: newEmail
-        } = JSON.parse(res.text);
-        index.innerHTML = newIndex;
-        document.getElementById(_id).childNodes[1].innerHTML = newId;
-        name.innerHTML = newName;
-        username.innerHTML = newUsername;
-        email.innerHTML = newEmail;
+        const newData = JSON.parse(res.text);
+
+        setTimeout(() => {
+          index.innerHTML = newData.index;
+          document.getElementById(_id).childNodes[1].innerHTML = newData._id;
+          name.innerHTML = newData.name;
+          username.innerHTML = newData.username;
+          email.innerHTML = newData.email;
+        }, 400);
       }
     };
 
@@ -148,79 +149,13 @@ function editUser(id) {
   }
 }
 
-// function cancelEdit() {
-//   const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
-
-//   const callback = (err, res) => {
-//     if (err) {
-//       console.log("status", res.xhr.status);
-//     } else {
-//       console.log("status", res.xhr.status);
-//       const usersList = JSON.parse(res.xhr.response).users;
-
-//       document.getElementById("tableBody").innerHTML = fillData(usersList);
-//       const createUserButton = document.getElementById("create-user-button");
-//       createUserButton.classList.remove("d-none");
-//     }
-//   };
-
-//   superagent
-//     .get("/get-users")
-//     .set("Content-Type", "application/json")
-//     .set("Accept", "application/json")
-//     .set("Authorization", "Bearer " + accessToken)
-//     .end(callback);
-
-//   httpRequest("GET", "/get-users", data, callback);
-// }
-
-function convertRow(index, id, name, username, email) {
-  return `
-<tr id="${id}">
-  <th id='index' scope="row">${index}</th>
-  <td>${id}</td>
-  <td>${name}</td>
-  <td>${username}</td>
-  <td>${email}</td>
-  <td>
-    <ul class="list-inline m-0">
-      <li class="list-inline-item">
-        <button
-          class="btn btn-success btn-sm rounded-0"
-          type="button"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Edit"
-          onclick="() => editUser(userInfo)"
-        >
-          <i class="bi bi-pencil"></i>
-        </button>
-      </li>
-      <li class="list-inline-item">
-        <button
-          class="btn btn-danger btn-sm rounded-0"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#deleteModal"
-          title="Delete"
-          onclick="cancelEdit()"
-        >
-          <i class="bi bi-trash"></i>
-        </button>
-      </li>
-    </ul>
-  </td>
-</tr>`;
-}
-
 function deleteUser(id) {
   // console.log(event.target);
+  const deleteModal = document.getElementById("deleteModal");
   if (id) {
-    const createUserModal = document.getElementById("deleteModal");
-    createUserModal.setAttribute("row-id", id);
+    deleteModal.setAttribute("row-id", id);
   } else {
-    const modal = document.getElementById("deleteModal");
-    const rowId = modal.getAttribute("row-id");
+    const rowId = deleteModal.getAttribute("row-id");
 
     const callback = (err, res) => {
       if (err) {
@@ -229,7 +164,7 @@ function deleteUser(id) {
         const row = document.getElementById(rowId);
         row.remove();
 
-        const bsModal = bootstrap.Modal.getInstance(modal);
+        const bsModal = bootstrap.Modal.getInstance(deleteModal);
         bsModal.hide();
       }
     };
@@ -466,7 +401,6 @@ function sendRegisterData() {
   invalidPassword.className = "d-none";
 
   if (passwordValue !== repeatPasswordValue) {
-    document.getElementById("password").classList.add("is-invalid");
     document.getElementById("repeat-password").classList.add("is-invalid");
     passwordError.className = "invalid-feedback";
   }
@@ -611,59 +545,3 @@ function logOut() {
   localStorage.removeItem("token");
   window.location.pathname = "/login";
 }
-
-// if (
-//   localStorage.getItem("account") &&
-//   window.location.pathname != "/register"
-// ) {
-//   const loginButton = document.getElementById("login-button");
-//   const registerButton = document.getElementById("register-button");
-
-//   loginButton.classList.add("d-none");
-//   registerButton.classList.add("d-none");
-// } else if (
-//   !localStorage.getItem("account") &&
-//   window.location.pathname != "/register" &&
-//   window.location.pathname != "/login"
-// ) {
-//   logOut();
-//   window.location.pathname = "/register";
-// }
-
-// if (window.location.pathname == "/users") {
-//   window.onload = function userTable() {
-//     const xhr = new XMLHttpRequest();
-//     xhr.open("GET", "/users");
-
-//     xhr.setRequestHeader("Accept", "application/json");
-//     xhr.setRequestHeader("Content-Type", "application/json");
-
-//     xhr.onreadystatechange = () => {
-//       if (xhr.readyState == 4 && xhr.status == 200) {
-//       }
-//     };
-//   };
-// }
-
-// (function dynamicTitle() {
-//   let title = document.getElementById("title");
-//   switch (window.location.pathname) {
-//     case "/about":
-//       title.innerHTML = `${title.innerText} | ABOUT`;
-//       document.title = "About";
-//       break;
-
-//     case "/users":
-//       title.innerHTML = `${title.innerText} | USERS`;
-//       break;
-
-//     case "/profile":
-//       title.innerHTML = `${title.innerText} | PROFILE`;
-//       document.title = "Profile";
-//       break;
-
-//     case "/":
-//       title.innerHTML = `${title.innerText} | HOME`;
-//       document.title = "Home";
-//   }
-// })();
