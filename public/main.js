@@ -1,5 +1,6 @@
 function httpRequest(method, url, data, callback) {
-  const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
+  const accessToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
   if (method == "GET") {
     superagent
       .get(url)
@@ -43,10 +44,11 @@ function saveAccount() {
   );
 }
 
-// (function sendToken() {
+
+// function sendToken() {
 //   const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
 //   superagent
-//     .get("/read-users")
+//     .get("/about")
 //     .set("Content-Type", "application/json")
 //     .set("Accept", "application/json")
 //     .set("Authorization", "Bearer " + accessToken)
@@ -54,10 +56,14 @@ function saveAccount() {
 //       if (err) {
 //         console.log(err);
 //       } else {
-//         console.log("token sent");
-//       }
-//     });
-// })();
+//           console.log("token sent");
+//         }
+//       });
+// }
+
+// if(window.location.pathname == '/users'){
+// sendToken();
+// }
 
 (function isLogged() {
   if (localStorage.getItem("token") && window.location.pathname == "/users") {
@@ -78,7 +84,7 @@ function saveAccount() {
     };
 
     superagent
-      .get("/get-users")
+      .get("/users")
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
       .set("Authorization", "Bearer " + accessToken)

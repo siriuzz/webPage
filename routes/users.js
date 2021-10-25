@@ -1,10 +1,10 @@
 const User = require("../models/userModel");
-const { checkToken, authRole } = require("../public/auth");
+const { checkToken } = require("../public/auth");
 
 module.exports = (app) => {
   //renderiza la pagina de users al ir a esa direccion
-  
-  app.get("/users", async (req, res) => {
+
+  app.get("/users", checkToken, async (req, res) => {
     res.render("users.ejs", { title: "Users" });
   });
 
@@ -13,15 +13,13 @@ module.exports = (app) => {
   //   console.log('xd');
   // })
 
-  app.get("/get-users", checkToken, authRole, async (req, res) => {
+  app.get("/get-users", async (req, res) => {
     const findAllUsers = await User.find();
 
     res.status(200).json({
       title: "Users",
       users: findAllUsers
-    })
-
-
+    });
   });
 
   app.delete("/users/:_id", async (req, res) => {

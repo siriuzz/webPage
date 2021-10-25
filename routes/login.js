@@ -17,7 +17,9 @@ module.exports = (app) => {
         username,
         password
       };
-      const findUser = await User.findOne({ username: user.username });
+      const findUser = await User.findOne({ username: user.username })
+      console.log(findUser);
+      const findUserWithPassword = await User.findOne({ username: user.username }).select("+password");
       const findUserObj = {
         _id: findUser._id,
         name: findUser.name,
@@ -29,7 +31,7 @@ module.exports = (app) => {
         return res.status(401).json("wrong email or password");
       }
 
-      if (await bcrypt.compare(user.password, findUser.password)) {
+      if (await bcrypt.compare(user.password, findUserWithPassword.password)) {
 
         const accessToken = jwt.sign(
           findUserObj,
