@@ -1,12 +1,9 @@
 function httpRequest(method, url, data, callback) {
-  const accessToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
   if (method == "GET") {
     superagent
       .get(url)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
-      .set("Authorization", "Bearer " + accessToken)
       .end(callback);
   } else if (method == "POST") {
     superagent
@@ -14,7 +11,6 @@ function httpRequest(method, url, data, callback) {
       .send(data)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
-      .set("Authorization", "Bearer " + accessToken)
       .end(callback);
   } else if (method == "PUT") {
     superagent
@@ -22,7 +18,6 @@ function httpRequest(method, url, data, callback) {
       .send(data)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
-      .set("Authorization", "Bearer " + accessToken)
       .end(callback);
   } else if (method == "DELETE") {
     superagent
@@ -30,10 +25,11 @@ function httpRequest(method, url, data, callback) {
       .send(data)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
-      .set("Authorization", "Bearer " + accessToken)
       .end(callback);
   }
 }
+
+const cookie = document.cookie;
 
 function saveAccount() {
   localStorage.setItem(
@@ -44,14 +40,11 @@ function saveAccount() {
   );
 }
 
-
 // function sendToken() {
-//   const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
 //   superagent
 //     .get("/about")
 //     .set("Content-Type", "application/json")
 //     .set("Accept", "application/json")
-//     .set("Authorization", "Bearer " + accessToken)
 //     .end((err, res) => {
 //       if (err) {
 //         console.log(err);
@@ -66,10 +59,9 @@ function saveAccount() {
 // }
 
 (function isLogged() {
-  if (localStorage.getItem("token") && window.location.pathname == "/users") {
-    // event.preventDefault();
-    const accessToken = JSON.parse(localStorage.getItem("token")).accessToken;
-
+  const cookie = document.cookie;
+  const token = cookie.split("accessToken=")[1];
+  if (token && window.location.pathname == "/users") {
     const callback = (err, res) => {
       if (err) {
         console.log("status", res.xhr.status);
@@ -84,10 +76,9 @@ function saveAccount() {
     };
 
     superagent
-      .get("/users")
+      .get("/get-users")
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
-      .set("Authorization", "Bearer " + accessToken)
       .end(callback);
   }
 })();
@@ -95,6 +86,7 @@ function saveAccount() {
 function editUser(id) {
   event.preventDefault();
 
+  const selectRole = document.getElementById("select-role");
   if (id) {
     const modal = document.getElementById("editModal");
     const curRow = document.getElementById(id).childNodes;
@@ -109,6 +101,18 @@ function editUser(id) {
     editName.value = curRow[2].innerHTML;
     editUsername.value = curRow[3].innerHTML;
     editEmail.value = curRow[4].innerHTML;
+
+    switch (curRow[5].innerHTML) {
+      case "Super Administrator":
+        selectRole.selectedIndex = "0";
+        break;
+      case "Administrator":
+        selectRole.selectedIndex = "1";
+        break;
+      case "User":
+        selectRole.selectedIndex = "2";
+        break;
+    }
   } else {
     const modal = document.getElementById("editModal");
     const _id = modal.getAttribute("row-id");
@@ -116,7 +120,8 @@ function editUser(id) {
       [0]: index,
       [2]: name,
       [3]: username,
-      [4]: email
+      [4]: email,
+      [5]: role
     } = document.getElementById(_id).childNodes;
 
     const callback = (err, res) => {
@@ -139,6 +144,7 @@ function editUser(id) {
           name.innerHTML = newData.name;
           username.innerHTML = newData.username;
           email.innerHTML = newData.email;
+          role.innerHTML = newData.role;
         }, 400);
       }
     };
@@ -148,7 +154,8 @@ function editUser(id) {
       _id: _id,
       name: document.getElementById("edit-name").value,
       username: document.getElementById("edit-username").value,
-      email: document.getElementById("edit-email").value
+      email: document.getElementById("edit-email").value,
+      role: selectRole.value
     };
 
     httpRequest("PUT", "/edit-user", data, callback);
@@ -217,6 +224,10 @@ function fillData(users) {
     //email
     const tableDataEmail = document.createElement("td");
     tableDataEmail.innerHTML = user.email;
+
+    //role
+    const tableDataRole = document.createElement("td");
+    tableDataRole.innerHTML = user.role.label;
 
     //buttons
     const tableDataButtons = document.createElement("td");
@@ -289,6 +300,7 @@ function fillData(users) {
       tableDataName,
       tableDataUsername,
       tableDataEmail,
+      tableDataRole,
       tableDataButtons
     ];
 
@@ -363,7 +375,8 @@ function sendRegisterData() {
   const password = document.getElementById("password");
   const repeatPassword = document.getElementById("repeat-password");
 
-  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+  const emailRegex =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   function validateEmail(email) {
     if (emailRegex.test(email.value)) {
@@ -443,12 +456,9 @@ function sendRegisterData() {
           document.getElementById("register-title").innerHTML =
             "Cuenta creada exitosamente";
 
-          localStorage.setItem(
-            "token",
-            JSON.stringify({
-              accessToken: JSON.parse(res.text).accessToken
-            })
-          );
+          document.cookie = `accessToken=${
+            JSON.parse(res.text).accessToken
+          };secure`;
 
           setTimeout(() => {
             window.location = "/";
@@ -457,7 +467,9 @@ function sendRegisterData() {
           const modal = bootstrap.Modal.getInstance(
             document.getElementById("createModal")
           );
+          const form = document.querySelector("#createModal form");
           modal.hide();
+          form.reset();
 
           //agrega nueva fila al crear usuario
           const user = [
@@ -465,9 +477,11 @@ function sendRegisterData() {
               _id: JSON.parse(res.text)._id,
               name: JSON.parse(res.text).name,
               username: JSON.parse(res.text).username,
-              email: JSON.parse(res.text).email
+              email: JSON.parse(res.text).email,
+              role: { label: JSON.parse(res.text).role }
             }
           ];
+          console.log(JSON.parse(res.text));
           fillData(user);
         }
 
@@ -507,13 +521,9 @@ function sendLoginData() {
       password.classList.add("is-invalid");
     } else {
       saveAccount();
-
-      localStorage.setItem(
-        "token",
-        JSON.stringify({
-          accessToken: JSON.parse(res.text).accessToken
-        })
-      );
+      document.cookie = `accessToken=${
+        JSON.parse(res.text).accessToken
+      };secure`;
 
       setTimeout(() => {
         window.location = "/users";
@@ -525,13 +535,16 @@ function sendLoginData() {
 }
 
 function deleteAccount() {
-  if (localStorage.getItem("account")) {
+  const token = cookie.split("accessToken=")[1];
+  if (token) {
     const callback = (err, res) => {
       if (err) {
         console.log(err);
       } else {
         localStorage.removeItem("account");
-        localStorage.removeItem("token");
+        document.cookie =
+          "accessToken" + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+
         setTimeout(() => {
           window.location.pathname = "/register";
         }, 1000);
@@ -548,6 +561,7 @@ function deleteAccount() {
 
 function logOut() {
   localStorage.removeItem("account");
-  localStorage.removeItem("token");
+  document.cookie =
+    "accessToken" + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
   window.location.pathname = "/login";
 }

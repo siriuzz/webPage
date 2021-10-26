@@ -57,7 +57,7 @@ module.exports = (app) => {
       username,
       email,
       password,
-      role: "USER"
+      role: "6172bb63dc63da3daeba7bb2"
     });
 
     const salt = await bcrypt.genSalt(10);
@@ -70,11 +70,11 @@ module.exports = (app) => {
       name,
       username,
       email,
-      role: "USER"
+      role: "6172bb63dc63da3daeba7bb2"
     };
 
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "30m"
+      expiresIn: "1m"
     });
 
     res.status(200).json({
@@ -83,7 +83,7 @@ module.exports = (app) => {
       name: name,
       username: username,
       email: email,
-      role: "USER"
+      role: "User"
     });
   });
 };

@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const Role = require("../models/roleModel")
 const { checkToken } = require("../public/auth");
 
 module.exports = (app) => {
@@ -14,7 +15,10 @@ module.exports = (app) => {
   // })
 
   app.get("/get-users", async (req, res) => {
-    const findAllUsers = await User.find();
+    const findAllUsers = await User.find().populate({
+      path: "role",
+      select: "value label"
+    });
 
     res.status(200).json({
       title: "Users",
@@ -30,21 +34,23 @@ module.exports = (app) => {
   });
 
   app.put("/edit-user", async (req, res) => {
-    const { index, _id, name, username, email } = req.body;
+    const { index, _id, name, username, email, role } = req.body;
+    console.log(role)
 
     const myUser = await User.findOne({ _id: _id });
     const findUsername = await User.findOne({ username: username });
     const findEmail = await User.findOne({ email: email });
+    const findRole = await Role.findOne({ value: role });
 
     const editedUserInfo = {
       index,
       _id,
       name,
       username,
-      email
+      email,
+      role: findRole.label
     };
 
-    console.log(editedUserInfo);
 
     if (myUser.username !== username && myUser.email !== email) {
       if (findUsername && findEmail) {
@@ -84,8 +90,10 @@ module.exports = (app) => {
     }
 
     await User.findByIdAndUpdate(_id, {
+      name,
       username,
-      email
+      email,
+      role: findRole._id
     });
 
     res.status(200).json(editedUserInfo);
