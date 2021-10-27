@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const checkToken = (req, res, next) => {
   const cookie = req.headers["cookie"];
+  if(cookie == undefined) return res.redirect('/login')
   const name = 'accessToken='
   const token = cookie.split(name)[1];
   console.log('xd ')

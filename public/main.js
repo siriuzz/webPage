@@ -1,3 +1,4 @@
+
 function httpRequest(method, url, data, callback) {
   if (method == "GET") {
     superagent
@@ -29,7 +30,10 @@ function httpRequest(method, url, data, callback) {
   }
 }
 
+
 const cookie = document.cookie;
+
+
 
 function saveAccount() {
   localStorage.setItem(
@@ -61,6 +65,7 @@ function saveAccount() {
 (function isLogged() {
   const cookie = document.cookie;
   const token = cookie.split("accessToken=")[1];
+
   if (token && window.location.pathname == "/users") {
     const callback = (err, res) => {
       if (err) {
@@ -81,6 +86,8 @@ function saveAccount() {
       .set("Accept", "application/json")
       .end(callback);
   }
+
+  
 })();
 
 function editUser(id) {
