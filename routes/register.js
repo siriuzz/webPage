@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const Role = require("../models/roleModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -12,7 +13,9 @@ module.exports = (app) => {
 
   app.post("/register", async (req, res) => {
     //send data mongoose
-    const { name, username, email, password } = req.body;
+    const { name, username, email, password, role } = req.body;
+
+    console.log(role);
     if (!name || !username || !email)
       return res.status(500).json({ result: "empty fields" });
 
@@ -52,38 +55,77 @@ module.exports = (app) => {
       });
     }
 
-    const newUser = new User({
-      name,
-      username,
-      email,
-      password,
-      role: "6172bb63dc63da3daeba7bb2"
-    });
+    if (role == "") {
+      const newUser = new User({
+        name,
+        username,
+        email,
+        password,
+        role: "6172bb63dc63da3daeba7bb2"
+      });
 
-    const salt = await bcrypt.genSalt(10);
-    newUser.password = await bcrypt.hash(newUser.password, salt);
+      const salt = await bcrypt.genSalt(10);
+      newUser.password = await bcrypt.hash(newUser.password, salt);
 
-    const newUserData = await newUser.save();
+      const newUserData = await newUser.save();
 
-    const user = {
-      _id: newUserData._id,
-      name,
-      username,
-      email,
-      role: "6172bb63dc63da3daeba7bb2"
-    };
+      const user = {
+        _id: newUserData._id,
+        name,
+        username,
+        email,
+        role: "6172bb63dc63da3daeba7bb2"
+      };
 
-    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "1m"
-    });
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "15m"
+      });
 
-    res.status(200).json({
-      accessToken: accessToken,
-      _id: newUserData._id,
-      name: name,
-      username: username,
-      email: email,
-      role: "User"
-    });
+      res.status(200).json({
+        accessToken: accessToken,
+        _id: newUserData._id,
+        name: name,
+        username: username,
+        email: email,
+        role: "User"
+      });
+    } else {
+      const databaseRole = await Role.findOne({ value: role });
+      console.log(databaseRole);
+
+      const newUser = new User({
+        name,
+        username,
+        email,
+        password,
+        role: databaseRole._id
+      });
+
+      const salt = await bcrypt.genSalt(10);
+      newUser.password = await bcrypt.hash(newUser.password, salt);
+
+      const newUserData = await newUser.save();
+
+      const user = {
+        _id: newUserData._id,
+        name,
+        username,
+        email,
+        role: databaseRole._id
+      };
+
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "15m"
+      });
+
+      res.status(200).json({
+        accessToken: accessToken,
+        _id: newUserData._id,
+        name: name,
+        username: username,
+        email: email,
+        role: databaseRole.label
+      });
+    }
   });
 };

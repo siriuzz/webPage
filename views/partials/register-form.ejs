@@ -87,3 +87,14 @@
     Passwords do not match.
   </div>
 </div>
+<% if(title == 'Users'){ %>
+<select aria-describedby="role-error" class="form-select" aria-label="select-role" id="select-role">
+  <option></option>
+  <option value="superadministrator">Super Administrator</option>
+  <option value="administrator">Administrator</option>
+  <option value="user">User</option>
+</select>
+<div class="d-none" role="alert" id="role-error">
+  Please select a role.
+</div>
+<%} %>

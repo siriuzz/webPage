@@ -1,4 +1,3 @@
-
 function httpRequest(method, url, data, callback) {
   if (method == "GET") {
     superagent
@@ -30,10 +29,7 @@ function httpRequest(method, url, data, callback) {
   }
 }
 
-
 const cookie = document.cookie;
-
-
 
 function saveAccount() {
   localStorage.setItem(
@@ -72,7 +68,8 @@ function saveAccount() {
         console.log("status", res.xhr.status);
       } else {
         console.log("status", res.xhr.status);
-        const usersList = JSON.parse(res.xhr.response).users;
+        const usersList = JSON.parse(res.text).users;
+        console.log(JSON.parse(res.text))
 
         fillData(usersList);
         const createUserButton = document.getElementById("create-user-button");
@@ -86,8 +83,6 @@ function saveAccount() {
       .set("Accept", "application/json")
       .end(callback);
   }
-
-  
 })();
 
 function editUser(id) {
@@ -381,6 +376,7 @@ function sendRegisterData() {
   const usernameInput = document.getElementById("username");
   const password = document.getElementById("password");
   const repeatPassword = document.getElementById("repeat-password");
+  const selectRole = document.getElementById("select-role");
 
   const emailRegex =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -395,11 +391,13 @@ function sendRegisterData() {
 
   const emailVerification = validateEmail(emailInput);
 
+  //defaults
   nameInput.className = "form-control";
   emailInput.className = "form-control";
   usernameInput.className = "form-control";
   password.className = "form-control";
   repeatPassword.className = "form-control";
+  
 
   const idArray = ["name", "username", "email", "password", "repeat-password"];
   idArray.forEach((id) => {
@@ -422,6 +420,7 @@ function sendRegisterData() {
   // errores
   const passwordError = document.getElementById("password-error");
   const invalidPassword = document.getElementById("invalid-password");
+  const roleError = document.getElementById("role-error");
 
   passwordError.className = "d-none";
   invalidPassword.className = "d-none";
@@ -435,6 +434,12 @@ function sendRegisterData() {
     document.getElementById("password").classList.add("is-invalid");
     document.getElementById("repeat-password").classList.add("is-invalid");
     invalidPassword.className = "invalid-feedback";
+  }
+
+  if(selectRole.selectedIndex == "0"){
+    selectRole.classList.add('is-invalid');
+    roleError.className = 'invalid-feedback'
+
   }
 
   if (
@@ -475,6 +480,7 @@ function sendRegisterData() {
             document.getElementById("createModal")
           );
           const form = document.querySelector("#createModal form");
+          console.log(form);
           modal.hide();
           form.reset();
 
@@ -497,10 +503,11 @@ function sendRegisterData() {
     };
 
     const info = JSON.stringify({
-      name: document.getElementById("name").value,
-      username: document.getElementById("username").value,
-      email: document.getElementById("email").value,
-      password: document.getElementById("password").value
+      name: nameInput.value,
+      username: usernameInput.value,
+      email: emailInput.value,
+      password: password.value,
+      role: selectRole.value
     });
 
     httpRequest("POST", "/register", info, callback);
@@ -534,7 +541,7 @@ function sendLoginData() {
 
       setTimeout(() => {
         window.location = "/users";
-      }, 1500);
+      }, 150);
     }
   };
 

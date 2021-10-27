@@ -2,10 +2,11 @@ const jwt = require("jsonwebtoken");
 
 const checkToken = (req, res, next) => {
   const cookie = req.headers["cookie"];
+  const regex = /(^|(?<=; ))*token=+;? */g
+  console.log(cookie.match(regex))
   if(cookie == undefined) return res.redirect('/login')
   const name = 'accessToken='
   const token = cookie.split(name)[1];
-  console.log('xd ')
 
   if (typeof token !== "undefined") {
     const decodedToken = jwt.decode(token);
@@ -30,13 +31,10 @@ const checkToken = (req, res, next) => {
       }
     );
 
-      console.log(decodedToken)
-    // console.log(decodedToken.role);
-
-    if (decodedToken.role.value != "superadministrator") {
-      return res.status(403).send('ACCESS DENIED');
+    if (decodedToken.role.value == "superadministrator" || decodedToken.role.value == 'administrator') {
+      return next();
     } else {
-      next();
+      return res.status(403).send('ACCESS DENIED');
     };
   }
 };

@@ -54,7 +54,7 @@
           aria-label="Close"
         ></button>
       </div>
-      <form method="POST" action="/register" onsubmit="sendRegisterData()">
+      <form method="POST" action="/register" onsubmit="sendRegisterData()" novalidate>
         <div class="modal-body">
           <%- include("partials/register-form.ejs") %>
         </div>
