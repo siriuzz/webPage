@@ -30,6 +30,7 @@ function httpRequest(method, url, data, callback) {
 }
 
 const cookie = document.cookie;
+const token = cookie.replace("accessToken=", "");
 
 function saveAccount() {
   localStorage.setItem(
@@ -41,9 +42,6 @@ function saveAccount() {
 }
 
 (function isLogged() {
-  const cookie = document.cookie;
-  const token = cookie.split("accessToken=")[1];
-
   if (token && window.location.pathname == "/users") {
     const callback = (err, res) => {
       if (err) {
@@ -65,6 +63,26 @@ function saveAccount() {
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
       .end(callback);
+  } else if (token && window.location.pathname == "/profile") {
+    const callback = (err, res) => {
+      if (err) {
+        console.log(err);
+      } else {
+        const user = JSON.parse(res.text).user;
+        profileTable(user);
+      }
+    };
+
+    const data = {
+      token: token
+    };
+
+    superagent
+      .get("/get-profile")
+      .send(data)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .end(callback);
   }
 })();
 
@@ -82,11 +100,11 @@ function createRole() {
 
   if (roleLabelInput.value == "") {
     roleLabelInput.classList.add("is-invalid");
-    roleLabelError.innerHTML = "Please fill out this field."
+    roleLabelError.innerHTML = "Please fill out this field.";
     return;
   } else if (roleValueInput.value == "") {
     roleValueInput.classList.add("is-invalid");
-    roleValueError.innerHTML = "Please fill out this field."
+    roleValueError.innerHTML = "Please fill out this field.";
 
     return;
   }
@@ -94,13 +112,12 @@ function createRole() {
   const callback = (err, res) => {
     if (err) {
       const error = JSON.parse(res.text).error;
-      console.log(error);
       error.forEach((e) => {
         document.getElementById(e.field).classList.add("is-invalid");
         document.getElementById(e.error).innerHTML = e.text;
       });
     } else {
-      const roleModal = document.getElementById('createRoleModal');
+      const roleModal = document.getElementById("createRoleModal");
       const bsRoleModal = bootstrap.Modal.getInstance(roleModal);
       const roleModalForm = document.querySelector("#createRoleModal form");
 
@@ -117,6 +134,70 @@ function createRole() {
   httpRequest("POST", "/create-role", data, callback);
 }
 
+(function populateSelect() {
+  if (window.location.pathname == "/users") {
+    const callback = (err, res) => {
+      if (err) {
+        console.log(err);
+      } else {
+        const editRoleSelect = document.querySelector("#edit-role");
+        const createRoleSelect = document.querySelector("#select-role");
+
+        const roles = JSON.parse(res.text).roles;
+        roles.forEach((role) => {
+          const element = document.createElement("option");
+          element.innerHTML = role.label;
+
+          createRoleSelect.insertAdjacentElement("beforeend", element);
+        });
+
+        roles.forEach((role) => {
+          const element = document.createElement("option");
+          element.innerHTML = role.label;
+
+          editRoleSelect.insertAdjacentElement("beforeend", element);
+        });
+      }
+    };
+
+    superagent
+      .get("/get-roles")
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .end(callback);
+  }
+})();
+
+const editName = document.getElementById("edit-name");
+const editUsername = document.getElementById("edit-username");
+const editEmail = document.getElementById("edit-email");
+
+function editProfile() {
+  event.preventDefault();
+
+  const oldPassword = document.getElementById("old-password");
+  const newPassword = document.getElementById("new-password");
+  const profileTableChilds = document.getElementById('profileTable').childNodes;
+  const id = profileTableChilds[1].childNodes[1];
+  console.log(id);
+
+  const callback = (err, res) => {
+    if(err){
+      console.log(err);
+    } else {
+      console.log('salio bien')
+    }
+  }
+
+  const data = {
+    id: id,
+    name: editName.value,
+    username: editUsername.value
+  }
+
+  httpRequest('PUT', '/edit-profile', data, callback);
+}
+
 function editUser(id) {
   event.preventDefault();
 
@@ -124,9 +205,6 @@ function editUser(id) {
   if (id) {
     const modal = document.getElementById("editModal");
     const curRow = document.getElementById(id).childNodes;
-    const editName = document.getElementById("edit-name");
-    const editUsername = document.getElementById("edit-username");
-    const editEmail = document.getElementById("edit-email");
 
     modal.setAttribute("row-id", id);
     editUsername.classList.remove("is-invalid");
@@ -222,6 +300,64 @@ function deleteUser(id) {
 
     httpRequest("DELETE", "/users/:_id", data, callback);
   }
+}
+
+function profileTable(user) {
+  const profileDiv = document.getElementById("profile");
+  console.log(user);
+  profileDiv.innerHTML = `
+  <div class="row">
+  <div class="col">
+    <div class="profile-head">
+      <h3>${user.name}</h3>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#editModal"
+      >Edit Profile
+        </button>
+  </div>
+</div>
+<div class="flex-column">
+  <div>
+    <table class="table w-100 m-auto">
+      <tbody id="profileTable">
+        <tr>
+          <th scope="row">Id</th>
+          <td>: ${user._id}</td>
+        </tr>
+        <tr>
+          <th scope="row">Name</th>
+          <td>: ${user.name}</td>
+        </tr>
+        <tr>
+          <th scope="row">Username</th>
+          <td>: ${user.username}</td>
+        </tr>
+        <tr>
+          <th scope="row">Email</th>
+          <td>: ${user.email}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="d-flex justify-content-left align-items-left my-2">
+  <button type="button" class="btn btn-danger" onclick="logOut();">
+    <i class="bi bi-box-arrow-right"></i>
+    <span>LOG OUT</span>
+  </button>
+</div>
+<div class="d-flex justify-content-left align-items-left">
+  <button type="button" class="btn btn-danger" onclick="deleteAccount();">
+    <i class="bi bi-trash"></i>
+    <span>DELETE ACCOUNT</span>
+  </button>
+</div>`;
 }
 
 function fillData(users) {
@@ -365,9 +501,24 @@ function showPassword() {
   event.preventDefault();
   const eye1 = document.getElementById("eye1");
   const eye2 = document.getElementById("eye2");
-
+  
   const passwordInput = document.getElementById("password");
   const repeatPasswordInput = document.getElementById("repeat-password");
+  
+  if(window.location.pathname == '/profile'){
+    const eye3 = document.getElementById("eye3");
+    const oldPasswordInput = document.getElementById("old-password");
+
+    if(event.target === eye3){
+      if(eye3.classList.contains("fa-eye-slash")){
+        eye3.className = "fa fa-eye p-2";
+        oldPasswordInput.type = 'text';
+      } else {
+        eye3.className = "fa fa-eye-slash p-2";
+        oldPasswordInput.type = "password"
+      }
+    }
+  }
 
   if (event.target === eye1) {
     if (eye1.classList.contains("fa-eye-slash")) {
@@ -378,7 +529,7 @@ function showPassword() {
       eye1.classList.replace("fa-eye", "fa-eye-slash");
       passwordInput.type = "password";
     }
-  } else {
+  } else if(event.target === eye2) {
     if (eye2.classList.contains("fa-eye-slash")) {
       eye2.classList.replace("fa-eye-slash", "fa-eye");
       repeatPasswordInput.type = "text";
@@ -478,11 +629,12 @@ function sendRegisterData() {
     nameInput != "" &&
     usernameInput != "" &&
     email != "" &&
-    emailVerification == true
+    emailVerification == true &&
+    selectRole.value != ""
   ) {
     const callback = (err, res) => {
       if (err) {
-        const error = JSON.parse(res.xhr.response).error;
+        const error = JSON.parse(res.text).error;
         error.forEach((e) => {
           const input = document.getElementById(e.field);
           const alert = document.getElementById(e.alert);

@@ -40,8 +40,72 @@
   />
   <div class="invalid-feedback" id="email-taken">Email already in use</div>
 </div>
-<select class="form-select" aria-label="edit-role" id="edit-role">
-  <option value="superadministrator">Super Administrator</option>
-  <option value="administrator">Administrator</option>
-  <option value="user">User</option>
-</select>
+<% if(title == 'Users') { %>
+<select class="form-select" aria-label="edit-role" id="edit-role"></select>
+<% } %> <% if(title == 'Profile') { %>
+<div class="input-group mb-3">
+  <span class="input-group-text bg-primary"
+    ><i class="bi bi-key-fill text-white"></i
+  ></span>
+  <input
+    type="password"
+    class="form-control"
+    placeholder="Old password"
+    id="old-password"
+    aria-describedby="empty-field-password"
+    required
+  />
+  <div class="input-group-addon border d-flex align-items-center" tabindex="-1">
+    <a tabindex="-1" href onclick="showPassword()"
+      ><i class="fa fa-eye-slash p-2" aria-hidden="true" id="eye3"></i
+    ></a>
+  </div>
+  <div class="invalid-feedback" id="empty-field-password">
+    Please fill out this field.
+  </div>
+</div>
+<div class="input-group mb-3">
+  <span class="input-group-text bg-primary"
+    ><i class="bi bi-key-fill text-white"></i
+  ></span>
+  <input
+    type="password"
+    class="form-control"
+    placeholder="New password"
+    id="password"
+    aria-describedby="empty-field-password"
+    required
+  />
+  <div class="input-group-addon border d-flex align-items-center" tabindex="-1">
+    <a tabindex="-1" href onclick="showPassword()"
+      ><i class="fa fa-eye-slash p-2" aria-hidden="true" id="eye1"></i
+    ></a>
+  </div>
+  <div class="invalid-feedback" id="empty-field-password">
+    Please fill out this field.
+  </div>
+</div>
+<div class="input-group mb-3">
+  <span class="input-group-text bg-primary"
+    ><i class="bi bi-key-fill text-white"></i
+  ></span>
+  <input
+    type="password"
+    class="form-control"
+    placeholder="Repeat new password"
+    id="repeat-password"
+    required
+  />
+  <div class="input-group-addon border d-flex align-items-center">
+    <a tabindex="-1" href onclick="showPassword()"
+      ><i class="fa fa-eye-slash p-2" aria-hidden="true" id="eye2"></i
+    ></a>
+  </div>
+  <div class="d-none" role="alert" id="invalid-password">
+    Password must be at least 8 characters long.
+  </div>
+  <div class="d-none" role="alert" id="password-error">
+    Passwords do not match.
+  </div>
+</div>
+<% } %>

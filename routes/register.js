@@ -54,7 +54,54 @@ module.exports = (app) => {
       });
     }
 
-    if (role == "") {
+    const cookie = req.headers["cookie"];
+    const token = cookie.replace("accessToken=", "");
+    const decodedToken = jwt.decode(token);
+
+    const url = req.headers["referer"];
+
+    if (
+      (decodedToken.role.value == "administrator" ||
+        decodedToken.role.value == "superadministrator") &&
+      role != null &&
+      url.includes("users")
+    ) {
+      const databaseRole = await Role.findOne({ value: role });
+
+      const newUser = new User({
+        name,
+        username,
+        email,
+        password,
+        role: databaseRole._id
+      });
+
+      const salt = await bcrypt.genSalt(10);
+      newUser.password = await bcrypt.hash(newUser.password, salt);
+
+      const newUserData = await newUser.save();
+
+      const user = {
+        _id: newUserData._id,
+        name: newUserData.name,
+        usename: newUserData.username,
+        email: newUserData.email,
+        role: newUserData._id
+      };
+
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "15m"
+      });
+
+      res.status(200).json({
+        accessToken: accessToken,
+        _id: newUserData._id,
+        name: name,
+        username: username,
+        email: email,
+        role: databaseRole.label
+      });
+    } else {
       const newUser = new User({
         name,
         username,
@@ -87,43 +134,6 @@ module.exports = (app) => {
         username: username,
         email: email,
         role: "User"
-      });
-    } else {
-      const databaseRole = await Role.findOne({ value: role });
-      console.log(databaseRole);
-
-      const newUser = new User({
-        name,
-        username,
-        email,
-        password,
-        role: databaseRole._id
-      });
-
-      const salt = await bcrypt.genSalt(10);
-      newUser.password = await bcrypt.hash(newUser.password, salt);
-
-      const newUserData = await newUser.save();
-
-      const user = {
-        _id: newUserData._id,
-        name,
-        username,
-        email,
-        role: databaseRole._id
-      };
-
-      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "15m"
-      });
-
-      res.status(200).json({
-        accessToken: accessToken,
-        _id: newUserData._id,
-        name: name,
-        username: username,
-        email: email,
-        role: databaseRole.label
       });
     }
   });

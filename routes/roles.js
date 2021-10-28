@@ -2,6 +2,19 @@ const Role = require("../models/roleModel");
 const { checkToken } = require("../public/auth");
 
 module.exports = (app) => {
+  app.get("/get-roles", async (req, res) => {
+    try {
+      const roles = await Role.find();
+
+      res.status(200).json({
+        roles: roles
+      });
+    } catch (error) {
+      res.status(500).json({error: "error getting roles"});
+      console.log(error);
+    }
+  });
+
   app.post("/create-role", checkToken, async (req, res) => {
     try {
       const { label, value } = req.body;
@@ -56,8 +69,8 @@ module.exports = (app) => {
         value
       });
 
-      await newRole.save();
-      res.status(200).json({ success: "true" });
+      const newRoleData = await newRole.save();
+      res.status(200).json({ role: newRoleData });
     } catch (error) {
       res.status(500).json({
         error: error
