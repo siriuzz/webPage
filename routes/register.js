@@ -15,7 +15,6 @@ module.exports = (app) => {
     //send data mongoose
     const { name, username, email, password, role } = req.body;
 
-    console.log(role);
     if (!name || !username || !email)
       return res.status(500).json({ result: "empty fields" });
 

@@ -4,4 +4,5 @@ module.exports = (app) => {
     require('./routes/home')(app);
     require('./routes/users')(app);
     require('./routes/login')(app);
+    require('./routes/roles')(app);
 }

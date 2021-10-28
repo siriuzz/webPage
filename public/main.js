@@ -40,24 +40,6 @@ function saveAccount() {
   );
 }
 
-// function sendToken() {
-//   superagent
-//     .get("/about")
-//     .set("Content-Type", "application/json")
-//     .set("Accept", "application/json")
-//     .end((err, res) => {
-//       if (err) {
-//         console.log(err);
-//       } else {
-//           console.log("token sent");
-//         }
-//       });
-// }
-
-// if(window.location.pathname == '/users'){
-// sendToken();
-// }
-
 (function isLogged() {
   const cookie = document.cookie;
   const token = cookie.split("accessToken=")[1];
@@ -69,11 +51,12 @@ function saveAccount() {
       } else {
         console.log("status", res.xhr.status);
         const usersList = JSON.parse(res.text).users;
-        console.log(JSON.parse(res.text))
 
         fillData(usersList);
         const createUserButton = document.getElementById("create-user-button");
+        const createRoleButton = document.getElementById("create-role-button");
         createUserButton.classList.remove("d-none");
+        createRoleButton.classList.remove("d-none");
       }
     };
 
@@ -85,10 +68,59 @@ function saveAccount() {
   }
 })();
 
+function createRole() {
+  event.preventDefault();
+
+  const roleLabelInput = document.getElementById("role-label-input");
+  const roleValueInput = document.getElementById("role-value-input");
+
+  roleLabelInput.classList.remove("is-invalid");
+  roleValueInput.classList.remove("is-invalid");
+
+  const roleLabelError = document.getElementById("role-label-error");
+  const roleValueError = document.getElementById("role-value-error");
+
+  if (roleLabelInput.value == "") {
+    roleLabelInput.classList.add("is-invalid");
+    roleLabelError.innerHTML = "Please fill out this field."
+    return;
+  } else if (roleValueInput.value == "") {
+    roleValueInput.classList.add("is-invalid");
+    roleValueError.innerHTML = "Please fill out this field."
+
+    return;
+  }
+
+  const callback = (err, res) => {
+    if (err) {
+      const error = JSON.parse(res.text).error;
+      console.log(error);
+      error.forEach((e) => {
+        document.getElementById(e.field).classList.add("is-invalid");
+        document.getElementById(e.error).innerHTML = e.text;
+      });
+    } else {
+      const roleModal = document.getElementById('createRoleModal');
+      const bsRoleModal = bootstrap.Modal.getInstance(roleModal);
+      const roleModalForm = document.querySelector("#createRoleModal form");
+
+      bsRoleModal.hide();
+      roleModalForm.reset();
+    }
+  };
+
+  const data = {
+    label: roleLabelInput.value,
+    value: roleValueInput.value
+  };
+
+  httpRequest("POST", "/create-role", data, callback);
+}
+
 function editUser(id) {
   event.preventDefault();
 
-  const selectRole = document.getElementById("select-role");
+  const selectRole = document.getElementById("edit-role");
   if (id) {
     const modal = document.getElementById("editModal");
     const curRow = document.getElementById(id).childNodes;
@@ -241,7 +273,7 @@ function fillData(users) {
     listItemEdit.className = "list-inline-item";
 
     const buttonEdit = document.createElement("button");
-    buttonEdit.className = "btn btn-success btn-sm rounded-0";
+    buttonEdit.className = "btn btn-success btn-sm rounded";
     buttonEdit.type = "button";
     buttonEdit.setAttribute("data-bs-toggle", "modal");
     buttonEdit.setAttribute("data-bs-target", "#editModal");
@@ -255,7 +287,7 @@ function fillData(users) {
     listItemDelete.className = "list-inline-item";
 
     const buttonDelete = document.createElement("button");
-    buttonDelete.className = "btn btn-danger btn-sm rounded-0";
+    buttonDelete.className = "btn btn-danger btn-sm rounded";
     buttonDelete.type = "button";
     buttonDelete.setAttribute("data-bs-toggle", "modal");
     buttonDelete.setAttribute("data-bs-target", "#deleteModal");
@@ -397,7 +429,6 @@ function sendRegisterData() {
   usernameInput.className = "form-control";
   password.className = "form-control";
   repeatPassword.className = "form-control";
-  
 
   const idArray = ["name", "username", "email", "password", "repeat-password"];
   idArray.forEach((id) => {
@@ -436,10 +467,9 @@ function sendRegisterData() {
     invalidPassword.className = "invalid-feedback";
   }
 
-  if(selectRole.selectedIndex == "0"){
-    selectRole.classList.add('is-invalid');
-    roleError.className = 'invalid-feedback'
-
+  if (selectRole.selectedIndex == "0") {
+    selectRole.classList.add("is-invalid");
+    roleError.className = "invalid-feedback";
   }
 
   if (

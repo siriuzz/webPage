@@ -16,9 +16,6 @@ app.set("view engine", "ejs");
 
 require("./routes")(app);
 
-//conexion global db
-var result;
-
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 
@@ -39,65 +36,3 @@ mongoose.connection
 });
 
 app.listen(3000, () => console.log("server on port 3000"));
-// // router profile
-// const profileRouter = require('./routes/profile');
-// app.use('/profile', profileRouter);
-
-// //router register
-// const registerRouter = require("./routes/register");
-// app.use("/register", registerRouter);
-
-// //router users
-// const userRouter = require("./routes/users");
-// app.use("/users", userRouter);
-
-// //router contact
-// const contactRouter = require("./routes/contact");
-// app.use("/contact", contactRouter);
-
-//paginas
-
-
-//conectar con db mongodb
-// const { MongoClient } = require('mongodb');
-
-// async function main() {
-
-//     const uri = 'mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false';
-
-//     const client = new MongoClient(uri);
-
-//     async function createListing(client, newListing){
-//         const result = await client.db('webDB').collection('users').insertOne(newListing);
-
-//         console.log('Listing created');
-//     }
-
-//     try {
-
-//         await client.connect();
-
-//         await createListing(client, {
-//             name:'Pepito',
-//             apellido: 'Sanchez'
-//         });
-
-//     } catch(e) {
-//         console.error(e);
-//     } finally{
-//         await client.close();
-//     }
-// }
-
-// main().catch(console.error)
-
-// async function listDatabases(client){
-//     const dbList = await client.db().admin().listDatabases();
-
-//     console.log('Databases: ')
-//     dbList.databases.forEach(db => {
-//         console.log(`- ${db.name}`)
-//     });
-// }
-
-
