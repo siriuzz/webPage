@@ -7,8 +7,12 @@
     class="form-control"
     placeholder="Name"
     id="edit-name"
+    aria-describedby="name-error"
     required
   />
+  <div class="invalid-feedback" role="alert" id="name-error">
+    Please fill out this field.
+  </div>
 </div>
 <div class="input-group mb-3">
   <span class="input-group-text bg-primary"
@@ -19,12 +23,10 @@
     type="text"
     placeholder="Username"
     id="edit-username"
-    aria-describedby="username-taken"
+    aria-describedby="username-error"
     required
   />
-  <div class="invalid-feedback" id="username-taken">
-    Username already in use
-  </div>
+  <div class="invalid-feedback" id="username-error"></div>
 </div>
 <div class="input-group mb-3">
   <span class="input-group-text bg-primary"
@@ -35,10 +37,10 @@
     class="form-control"
     placeholder="Email"
     id="edit-email"
-    aria-describedby="email-taken"
+    aria-describedby="email-error"
     required
   />
-  <div class="invalid-feedback" id="email-taken">Email already in use</div>
+  <div class="invalid-feedback" id="email-error"></div>
 </div>
 <% if(title == 'Users') { %>
 <select class="form-select" aria-label="edit-role" id="edit-role"></select>
@@ -52,7 +54,7 @@
     class="form-control"
     placeholder="Old password"
     id="old-password"
-    aria-describedby="empty-field-password"
+    aria-describedby="old-password-error"
     required
   />
   <div class="input-group-addon border d-flex align-items-center" tabindex="-1">
@@ -60,9 +62,7 @@
       ><i class="fa fa-eye-slash p-2" aria-hidden="true" id="eye3"></i
     ></a>
   </div>
-  <div class="invalid-feedback" id="empty-field-password">
-    Please fill out this field.
-  </div>
+  <div class="invalid-feedback" id="old-password-error">Please fill out this field.</div>
 </div>
 <div class="input-group mb-3">
   <span class="input-group-text bg-primary"

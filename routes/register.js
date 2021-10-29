@@ -54,19 +54,13 @@ module.exports = (app) => {
       });
     }
 
-    const cookie = req.headers["cookie"];
-    const token = cookie.replace("accessToken=", "");
-    const decodedToken = jwt.decode(token);
-
     const url = req.headers["referer"];
 
     if (
-      (decodedToken.role.value == "administrator" ||
-        decodedToken.role.value == "superadministrator") &&
       role != null &&
       url.includes("users")
     ) {
-      const databaseRole = await Role.findOne({ value: role });
+      const databaseRole = await Role.findOne({ label: role });
 
       const newUser = new User({
         name,
@@ -102,6 +96,7 @@ module.exports = (app) => {
         role: databaseRole.label
       });
     } else {
+
       const newUser = new User({
         name,
         username,

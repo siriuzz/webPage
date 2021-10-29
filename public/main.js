@@ -176,26 +176,126 @@ function editProfile() {
   event.preventDefault();
 
   const oldPassword = document.getElementById("old-password");
-  const newPassword = document.getElementById("new-password");
-  const profileTableChilds = document.getElementById('profileTable').childNodes;
-  const id = profileTableChilds[1].childNodes[1];
-  console.log(id);
+  const newPassword = document.getElementById("password");
+  const repeatNewPassword = document.getElementById("repeat-password");
 
-  const callback = (err, res) => {
-    if(err){
-      console.log(err);
-    } else {
-      console.log('salio bien')
+  //errors
+  const emptyFieldPassword = document.getElementById("empty-field-password");
+  const invalidPassword = document.getElementById("invalid-password");
+  const passwordError = document.getElementById("password-error");
+
+  if (event.target.innerHTML.includes("Edit Profile")) {
+    //defaults
+    editName.value = document
+      .querySelectorAll("#profileTable tr")[1]
+      .querySelector("td").innerHTML;
+
+    editUsername.value = document
+      .querySelectorAll("#profileTable tr")[2]
+      .querySelector("td").innerHTML;
+
+    editEmail.value = document
+      .querySelectorAll("#profileTable tr")[3]
+      .querySelector("td").innerHTML;
+  } else if (event.target.innerHTML == "Save") {
+    editName.classList.remove("is-invalid");
+    editUsername.classList.remove("is-invalid");
+    editEmail.classList.remove("is-invalid");
+    oldPassword.classList.remove("is-invalid");
+    newPassword.classList.remove("is-invalid");
+    repeatNewPassword.classList.remove("is-invalid");
+
+    passwordError.className = "d-none";
+    invalidPassword.className = "d-none";
+
+    const emailRegex =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    function validateEmail(email) {
+      if (emailRegex.test(email.value)) {
+        return true;
+      } else {
+        editEmail.classList.add("is-invalid");
+        document.getElementById("email-error").innerHTML = "Invalid email";
+        return false;
+      }
+    }
+
+    const emailVerification = validateEmail(editEmail);
+
+    const idArray = [
+      "edit-name",
+      "edit-username",
+      "edit-email",
+      "old-password",
+      "password",
+      "repeat-password"
+    ];
+    idArray.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element.value == "") {
+        element.classList.add("is-invalid");
+        if (id == "edit-username") {
+          document.getElementById("username-error").innerHTML =
+            "Please fill out this field";
+        } else if (id == "edit-email") {
+          document.getElementById("email-error").innerHTML =
+            "Please fill out this field";
+        }
+      }
+    });
+
+    if (newPassword.value != repeatNewPassword.value) {
+      emptyFieldPassword.className = "d-none";
+      repeatNewPassword.classList.add("is-invalid");
+      passwordError.className = "invalid-feedback";
+    }
+
+    if (newPassword.value.length < 8) {
+      newPassword.classList.add("is-invalid");
+      repeatNewPassword.classList.add("is-invalid");
+      invalidPassword.className = "invalid-feedback";
+    }
+
+    if (
+      editName.value != "" &&
+      editUser.value != "" &&
+      editEmail.value != "" &&
+      oldPassword.value != "" &&
+      newPassword.value != "" &&
+      repeatNewPassword.value != "" &&
+      emailVerification == true
+    ) {
+      const callback = (err, res) => {
+        if (err) {
+          console.log(err);
+          const error = JSON.parse(res.text).error;
+          error.forEach((e) => {
+            const input = document.getElementById(e.field);
+            const alert = document.getElementById(e.alert);
+
+            input.classList.add("is-invalid");
+            alert.className = "invalid-feedback";
+
+            alert.innerHTML = e.text;
+          });
+        } else {
+          const editProfileModal = bootstrap.Modal.getInstance(document.getElementById("editProfileModal"));
+          editProfileModal.hide();
+        }
+      };
+
+      const data = {
+        name: editName.value,
+        username: editUsername.value,
+        email: editEmail.value,
+        oldPassword: oldPassword.value,
+        password: newPassword.value
+      };
+
+      httpRequest("PUT", "/edit-profile", data, callback);
     }
   }
-
-  const data = {
-    id: id,
-    name: editName.value,
-    username: editUsername.value
-  }
-
-  httpRequest('PUT', '/edit-profile', data, callback);
 }
 
 function editUser(id) {
@@ -304,7 +404,6 @@ function deleteUser(id) {
 
 function profileTable(user) {
   const profileDiv = document.getElementById("profile");
-  console.log(user);
   profileDiv.innerHTML = `
   <div class="row">
   <div class="col">
@@ -317,7 +416,8 @@ function profileTable(user) {
       type="button"
       class="btn btn-primary"
       data-bs-toggle="modal"
-      data-bs-target="#editModal"
+      data-bs-target="#editProfileModal"
+      onclick="editProfile()"
       >Edit Profile
         </button>
   </div>
@@ -328,19 +428,19 @@ function profileTable(user) {
       <tbody id="profileTable">
         <tr>
           <th scope="row">Id</th>
-          <td>: ${user._id}</td>
+          <td>${user._id}</td>
         </tr>
         <tr>
           <th scope="row">Name</th>
-          <td>: ${user.name}</td>
+          <td>${user.name}</td>
         </tr>
         <tr>
           <th scope="row">Username</th>
-          <td>: ${user.username}</td>
+          <td>${user.username}</td>
         </tr>
         <tr>
           <th scope="row">Email</th>
-          <td>: ${user.email}</td>
+          <td>${user.email}</td>
         </tr>
       </tbody>
     </table>
@@ -501,21 +601,21 @@ function showPassword() {
   event.preventDefault();
   const eye1 = document.getElementById("eye1");
   const eye2 = document.getElementById("eye2");
-  
+
   const passwordInput = document.getElementById("password");
   const repeatPasswordInput = document.getElementById("repeat-password");
-  
-  if(window.location.pathname == '/profile'){
+
+  if (window.location.pathname == "/profile") {
     const eye3 = document.getElementById("eye3");
     const oldPasswordInput = document.getElementById("old-password");
 
-    if(event.target === eye3){
-      if(eye3.classList.contains("fa-eye-slash")){
+    if (event.target === eye3) {
+      if (eye3.classList.contains("fa-eye-slash")) {
         eye3.className = "fa fa-eye p-2";
-        oldPasswordInput.type = 'text';
+        oldPasswordInput.type = "text";
       } else {
         eye3.className = "fa fa-eye-slash p-2";
-        oldPasswordInput.type = "password"
+        oldPasswordInput.type = "password";
       }
     }
   }
@@ -529,7 +629,7 @@ function showPassword() {
       eye1.classList.replace("fa-eye", "fa-eye-slash");
       passwordInput.type = "password";
     }
-  } else if(event.target === eye2) {
+  } else if (event.target === eye2) {
     if (eye2.classList.contains("fa-eye-slash")) {
       eye2.classList.replace("fa-eye-slash", "fa-eye");
       repeatPasswordInput.type = "text";
@@ -617,11 +717,12 @@ function sendRegisterData() {
     document.getElementById("repeat-password").classList.add("is-invalid");
     invalidPassword.className = "invalid-feedback";
   }
-
-  if (selectRole.selectedIndex == "0") {
-    selectRole.classList.add("is-invalid");
-    roleError.className = "invalid-feedback";
-  }
+  // if (window.location.pathname == "/users") {
+  //   if (selectRole.selectedIndex == "0") {
+  //     selectRole.classList.add("is-invalid");
+  //     roleError.className = "invalid-feedback";
+  //   }
+  // }
 
   if (
     passwordValue == repeatPasswordValue &&
@@ -629,8 +730,7 @@ function sendRegisterData() {
     nameInput != "" &&
     usernameInput != "" &&
     email != "" &&
-    emailVerification == true &&
-    selectRole.value != ""
+    emailVerification == true
   ) {
     const callback = (err, res) => {
       if (err) {
@@ -683,16 +783,26 @@ function sendRegisterData() {
         saveAccount();
       }
     };
+    if (selectRole == null) {
+      const info = JSON.stringify({
+        name: nameInput.value,
+        username: usernameInput.value,
+        email: emailInput.value,
+        password: password.value
+      });
 
-    const info = JSON.stringify({
-      name: nameInput.value,
-      username: usernameInput.value,
-      email: emailInput.value,
-      password: password.value,
-      role: selectRole.value
-    });
+      httpRequest("POST", "/register", info, callback);
+    } else {
+      const info = JSON.stringify({
+        name: nameInput.value,
+        username: usernameInput.value,
+        email: emailInput.value,
+        password: password.value,
+        role: selectRole.value
+      });
 
-    httpRequest("POST", "/register", info, callback);
+      httpRequest("POST", "/register", info, callback);
+    }
   }
 }
 

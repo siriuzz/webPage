@@ -1,7 +1,7 @@
 <!-- EDIT USER MODAL -->
 <div
   class="modal fade"
-  id="editModal"
+  id="editProfileModal"
   data-bs-backdrop="static"
   data-bs-keyboard="false"
   tabindex="-1"
@@ -19,7 +19,7 @@
           aria-label="Close"
         ></button>
       </div>
-      <form method="PUT" action="/edit-profile" onsubmit="editProfile()" novalidate>
+      <form method="PUT" action="/edit-profile" novalidate>
         <div class="modal-body"><%- include("partials/edit-user.ejs") %></div>
         <div class="modal-footer">
           <button
@@ -29,7 +29,7 @@
           >
             Cancel
           </button>
-          <button class="btn btn-primary" type="submit">Save</button>
+          <button class="btn btn-primary" type="submit" onclick="editProfile()">Save</button>
         </div>
       </form>
     </div>

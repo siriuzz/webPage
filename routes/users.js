@@ -39,7 +39,7 @@ module.exports = (app) => {
     const myUser = await User.findOne({ _id: _id });
     const findUsername = await User.findOne({ username: username });
     const findEmail = await User.findOne({ email: email });
-    const findRole = await Role.findOne({ value: role });
+    const findRole = await Role.findOne({ label: role });
 
     const editedUserInfo = {
       index,
