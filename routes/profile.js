@@ -1,3 +1,5 @@
+require("dotenv");
+
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
@@ -24,6 +26,7 @@ module.exports = (app) => {
       const cookie = req.headers["cookie"];
       const token = cookie.replace("accessToken=", "");
       const userInfo = jwt.decode(token);
+      console.log(userInfo)
 
       res.status(200).json({
         user: userInfo
@@ -44,7 +47,7 @@ module.exports = (app) => {
       const id = decodedToken._id;
       const user = await User.findById(id).select("+password");
 
-      if(user == null){
+      if (user == null) {
         res.status(500).json({
           error: [
             {
@@ -53,7 +56,7 @@ module.exports = (app) => {
               alert: "old-password-error"
             }
           ]
-        })
+        });
       }
 
       const userTaken = await User.findOne({ username: username });
@@ -102,14 +105,25 @@ module.exports = (app) => {
       const salt = await bcrypt.genSalt(10);
       password = await bcrypt.hash(password, salt);
 
-      await User.findByIdAndUpdate(id, {
+      const updatedUser = await User.findByIdAndUpdate(id, {
         name,
         username,
         email,
         password
       });
 
-      res.status(200).json({success: 'info updated'})
+      const plainObject = {
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        role: updatedUser.role
+      };
+
+      const newToken = jwt.sign(plainObject, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "15m"
+      });
+      res.status(200).json({ token: newToken, user: updatedUser});
     } catch (e) {
       console.log("error: ", e);
     }

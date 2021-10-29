@@ -42,49 +42,66 @@ function saveAccount() {
 }
 
 (function isLogged() {
-  if (token && window.location.pathname == "/users") {
-    const callback = (err, res) => {
-      if (err) {
-        console.log("status", res.xhr.status);
-      } else {
-        console.log("status", res.xhr.status);
-        const usersList = JSON.parse(res.text).users;
+  if (token) {
+    const loginButton = document.getElementById("login-button");
+    loginButton.style.display = "none";
+    const registerButton = document.getElementById("register-button");
+    registerButton.style.display = "none";
 
-        fillData(usersList);
-        const createUserButton = document.getElementById("create-user-button");
-        const createRoleButton = document.getElementById("create-role-button");
-        createUserButton.classList.remove("d-none");
-        createRoleButton.classList.remove("d-none");
-      }
-    };
+    if (window.location.pathname == "/users") {
+      const callback = (err, res) => {
+        if (err) {
+          console.log("status", res.xhr.status);
+        } else {
+          console.log("status", res.xhr.status);
+          const usersList = JSON.parse(res.text).users;
 
-    superagent
-      .get("/get-users")
-      .set("Content-Type", "application/json")
-      .set("Accept", "application/json")
-      .end(callback);
-  } else if (token && window.location.pathname == "/profile") {
-    const callback = (err, res) => {
-      if (err) {
-        console.log(err);
-      } else {
-        const user = JSON.parse(res.text).user;
-        profileTable(user);
-      }
-    };
+          fillData(usersList);
+          const createUserButton =
+            document.getElementById("create-user-button");
+          const createRoleButton =
+            document.getElementById("create-role-button");
+          const usersLink = document.getElementById("users-link");
+          createUserButton.classList.remove("d-none");
+          createRoleButton.classList.remove("d-none");
+        }
+      };
 
-    const data = {
-      token: token
-    };
+      superagent
+        .get("/get-users")
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .end(callback);
+    } else if (window.location.pathname == "/profile") {
+      const callback = (err, res) => {
+        if (err) {
+          console.log(err);
+        } else {
+          const user = JSON.parse(res.text).user;
+          profileTable(user);
+        }
+      };
 
-    superagent
-      .get("/get-profile")
-      .send(data)
-      .set("Content-Type", "application/json")
-      .set("Accept", "application/json")
-      .end(callback);
+      const data = {
+        token: token
+      };
+
+      superagent
+        .get("/get-profile")
+        .send(data)
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .end(callback);
+    } else if (
+      window.location.pathname == "/login" ||
+      window.location.pathname == "/register"
+    ) {
+      return (window.location = "/");
+    }
   }
 })();
+
+function checkRole() {}
 
 function createRole() {
   event.preventDefault();
@@ -280,8 +297,14 @@ function editProfile() {
             alert.innerHTML = e.text;
           });
         } else {
-          const editProfileModal = bootstrap.Modal.getInstance(document.getElementById("editProfileModal"));
+          const editProfileModal = bootstrap.Modal.getInstance(
+            document.getElementById("editProfileModal")
+          );
           editProfileModal.hide();
+
+          const user = JSON.parse(res.text).user;
+          profileTable(user);
+          document.cookie = `accessToken=${JSON.parse(res.text).token}`;
         }
       };
 
@@ -713,7 +736,6 @@ function sendRegisterData() {
   }
 
   if (passwordValue.length < 8 && passwordValue.length > 0) {
-    document.getElementById("password").classList.add("is-invalid");
     document.getElementById("repeat-password").classList.add("is-invalid");
     invalidPassword.className = "invalid-feedback";
   }
@@ -756,7 +778,7 @@ function sendRegisterData() {
 
           setTimeout(() => {
             window.location = "/";
-          }, 2500);
+          }, 1500);
         } else if (window.location.pathname == "/users") {
           const modal = bootstrap.Modal.getInstance(
             document.getElementById("createModal")
@@ -829,10 +851,10 @@ function sendLoginData() {
       saveAccount();
       document.cookie = `accessToken=${
         JSON.parse(res.text).accessToken
-      };secure`;
+      }`;
 
       setTimeout(() => {
-        window.location = "/users";
+        window.location = "/";
       }, 150);
     }
   };

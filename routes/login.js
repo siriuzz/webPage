@@ -49,14 +49,13 @@ module.exports = (app) => {
           }
         );
 
+
         res.status(200).json({
           accessToken: accessToken
         });
       } else {
         res.status(401).json("wrong email or password");
       }
-
-      // console.log(users.find({username: user.name}));
     } catch (e) {
       console.log(e);
       res.status(500).json({ error: e });
